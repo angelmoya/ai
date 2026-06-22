@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo noupdate="1">
+    <record id="category_common" model="ai.skill.category">
+        <field name="name">common</field>
+        <field name="description">Cross-framework standards and best practices applicable to all development.</field>
+    </record>
+    <record id="category_flutter" model="ai.skill.category">
+        <field name="name">flutter</field>
+        <field name="description">High-density standards for modern Flutter development.</field>
+    </record>
+    <record id="category_android" model="ai.skill.category">
+        <field name="name">android</field>
+        <field name="description">Modern Android development with Jetpack Compose and Hilt.</field>
+    </record>
+    <record id="category_angular" model="ai.skill.category">
+        <field name="name">angular</field>
+        <field name="description">Modern Angular standards (Standalone components, Signals).</field>
+    </record>
+    <record id="category_react" model="ai.skill.category">
+        <field name="name">react</field>
+        <field name="description">Modern React development patterns.</field>
+    </record>
+    <record id="category_react_native" model="ai.skill.category">
+        <field name="name">react-native</field>
+        <field name="description">Mobile app standards for iOS and Android.</field>
+    </record>
+    <record id="category_nestjs" model="ai.skill.category">
+        <field name="name">nestjs</field>
+        <field name="description">Enterprise-grade Node.js backend development.</field>
+    </record>
+    <record id="category_nextjs" model="ai.skill.category">
+        <field name="name">nextjs</field>
+        <field name="description">Modern fullstack React framework standards (App Router).</field>
+    </record>
+    <record id="category_laravel" model="ai.skill.category">
+        <field name="name">laravel</field>
+        <field name="description">Expert standards for scalable Laravel applications.</field>
+    </record>
+    <record id="category_golang" model="ai.skill.category">
+        <field name="name">golang</field>
+        <field name="description">High-performance system and backend development with Go.</field>
+    </record>
+    <record id="category_typescript" model="ai.skill.category">
+        <field name="name">typescript</field>
+        <field name="description">Modern TypeScript standards for type-safe development.</field>
+    </record>
+    <record id="category_javascript" model="ai.skill.category">
+        <field name="name">javascript</field>
+        <field name="description">Modern JavaScript (ES2022+) patterns.</field>
+    </record>
+    <record id="category_dart" model="ai.skill.category">
+        <field name="name">dart</field>
+        <field name="description">Core language idioms and patterns.</field>
+    </record>
+    <record id="category_spring_boot" model="ai.skill.category">
+        <field name="name">spring-boot</field>
+        <field name="description">Enterprise Java development with Spring Boot.</field>
+    </record>
+    <record id="category_ios" model="ai.skill.category">
+        <field name="name">ios</field>
+        <field name="description">iOS development with SwiftUI.</field>
+    </record>
+    <record id="category_database" model="ai.skill.category">
+        <field name="name">database</field>
+        <field name="description">Database best practices.</field>
+    </record>
+    <record id="ai_skill_category_uncategorized" model="ai.skill.category">
+        <field name="name">Uncategorized</field>
+        <field name="description">Skills without a specific category.</field>
+    </record>
+
+    <record id="category_weather" model="ai.skill.category">
+        <field name="name">weather</field>
+        <field name="description">Weather forecast skills using web_fetch tool.</field>
+    </record>
+
+    <record id="skill_weather" model="ai.skill">
+        <field name="name">Weather Forecast</field>
+        <field name="description">Get current weather and forecasts for any city using the web_fetch tool to query wttr.in (no API key required).</field>
+        <field name="category_id" ref="category_weather" />
+        <field name="priority">P1</field>
+        <field name="source">custom</field>
+        <field name="content">You have access to the web_fetch tool which can fetch content from URLs.
+
+Use it to get weather data from wttr.in (free, no API key needed).
+
+How to get weather:
+
+Current weather (compact):
+  web_fetch(url="wttr.in/London?format=3")
+  Response example: "London: Sunny 8C"
+
+Full forecast:
+  web_fetch(url="wttr.in/London?T")
+
+Custom format:
+  web_fetch(url="wttr.in/London?format=%l: %c %t %h %w")
+
+Tips:
+- URL-encode spaces: use wttr.in/New+York for "New York"
+- Airport codes work: wttr.in/JFK
+- Metric units: ?m (default)
+- US units: ?u
+- Today only: ?1
+
+JSON format (for programmatic use) - Open-Meteo fallback:
+  web_fetch(url="https://api.open-meteo.com/v1/forecast?latitude=51.5&amp;longitude=-0.12&amp;current_weather=true")
+
+Coordinate lookup:
+  web_fetch(url="https://geocoding-api.open-meteo.com/v1/search?name=London&amp;count=1")
+  Returns latitude, longitude, country, etc.</field>
+    </record>
+</odoo>

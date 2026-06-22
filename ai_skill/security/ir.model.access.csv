@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_ai_skill_category,access_ai_skill_category,model_ai_skill_category,base.group_user,1,0,0,0
+access_ai_skill_category_system,access_ai_skill_category_system,model_ai_skill_category,base.group_system,1,1,1,1
+access_ai_skill,access_ai_skill,model_ai_skill,base.group_user,1,0,0,0
+access_ai_skill_system,access_ai_skill_system,model_ai_skill,base.group_system,1,1,1,1

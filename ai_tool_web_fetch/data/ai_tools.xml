@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record model="ai.tool" id="web_fetch">
+        <field name="name">web_fetch</field>
+        <field name="description">Fetch the content of a URL and return it as text. Useful for fetching web pages, API responses, or any online resource.</field>
+        <field name="model_id" ref="model_ai_tool" />
+        <field name="function_name">_ai_web_fetch</field>
+        <field name="kind">generic</field>
+    </record>
+</odoo>

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2026 Dixmit
+     License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <record model="ir.ui.view" id="ai_connection_base_openai_form_view">
+        <field name="name">ai.connection.base.openai.form.inherit</field>
+        <field name="model">ai.connection</field>
+        <field name="inherit_id" ref="ai_connection.ai_connection_form_view" />
+        <field name="arch" type="xml">
+            <field name="kind" position="after">
+                <field name="url" groups="base.group_system" />
+                <field name="model" groups="base.group_system" />
+                <field name="api_key" password="True"
+                    invisible="kind not in ('base_openai', 'openai', 'ollama')"
+                    groups="base.group_system"
+                />
+                <field name="max_tokens"
+                    invisible="kind not in ('base_openai', 'openai', 'ollama')"
+                />
+                <field name="temperature"
+                    invisible="kind not in ('base_openai', 'openai', 'ollama')"
+                />
+            </field>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record model="ir.ui.view" id="ai_skill_tree_view">
+        <field name="model">ai.skill</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name" />
+                <field name="category_id" />
+                <field name="priority" />
+                <field name="source" />
+                <field name="active" />
+            </list>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="ai_skill_search_view">
+        <field name="model">ai.skill</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name" />
+                <field name="category_id" />
+                <field name="source" />
+                <separator />
+                <filter name="active" string="Active" domain="[('active', '=', True)]" />
+            </search>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="ai_skill_form_view">
+        <field name="model">ai.skill</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_sync_from_disk"
+                        type="object"
+                        string="Sync from Disk"
+                        class="btn-primary"
+                        confirm="Sync all skills from disk? Existing skills will be updated." />
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name" />
+                            <field name="category_id" />
+                            <field name="priority" />
+                            <field name="active" />
+                        </group>
+                        <group>
+                            <field name="source" />
+                            <field name="source_url" />
+                            <field name="file_path" />
+                        </group>
+                    </group>
+                    <group name="triggers" string="Triggers">
+                        <field name="triggers" nolabel="1" />
+                    </group>
+                    <notebook>
+                        <page string="Description">
+                            <field name="description" nolabel="1" />
+                        </page>
+                        <page string="Content">
+                            <field name="content" nolabel="1" />
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="ai_skill_act_window">
+        <field name="name">Skills</field>
+        <field name="res_model">ai.skill</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[]</field>
+        <field name="context">{}</field>
+        <field name="search_view_id" ref="ai_skill_search_view" />
+    </record>
+
+</odoo>

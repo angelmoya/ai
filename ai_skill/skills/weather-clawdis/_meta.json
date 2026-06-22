@@ -1,0 +1,7 @@
+{
+  "owner": "steipete/clawdis",
+  "source": "https://www.skills.sh/steipete/clawdis/weather",
+  "version": "1.0.0",
+  "importedAt": 1770422400000,
+  "notes": "Skill adaptado de skills.sh. El web_fetch actual no soporta extractMode/maxChars; el LLM debe adaptarse al schema real (solo url)."
+}

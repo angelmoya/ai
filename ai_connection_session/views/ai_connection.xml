@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2026 Dixmit
+     License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <record model="ir.ui.view" id="ai_connection_session_form_view">
+        <field name="name">ai.connection.session.form.inherit</field>
+        <field name="model">ai.connection</field>
+        <field name="inherit_id" ref="ai_connection.ai_connection_form_view" />
+        <field name="arch" type="xml">
+            <header position="inside">
+                <button name="action_open_call_wizard"
+                    type="object"
+                    class="btn-primary"
+                    string="Send Prompt" />
+            </header>
+            <xpath expr="//sheet/group[1]" position="before">
+                <div class="oe_button_box" name="button_box">
+                    <button name="%(ai_connection_session_for_connection_act_window)d"
+                        type="action"
+                        class="oe_stat_button"
+                        icon="fa-comments">
+                        <field name="session_count" widget="statinfo" string="Sessions" />
+                    </button>
+                    <button name="%(ai_connection_call_act_window)d"
+                        type="action"
+                        class="oe_stat_button"
+                        icon="fa-phone">
+                        <field name="call_count" widget="statinfo" string="Calls" />
+                    </button>
+                </div>
+            </xpath>
+            <field name="kind" position="after">
+                <field name="tool_ids" widget="many2many_tags" />
+            </field>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="ai_connection_session_list_view">
+        <field name="model">ai.connection</field>
+        <field name="inherit_id" ref="ai_connection.ai_connection_list_view" />
+        <field name="arch" type="xml">
+            <field name="kind" position="after">
+                <field name="call_count" />
+            </field>
+        </field>
+    </record>
+</odoo>
