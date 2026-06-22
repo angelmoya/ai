@@ -23,16 +23,13 @@ class AiSkill(models.Model):
         "ai.skill.category", string="Category", index=True, required=True
     )
     triggers = fields.Json(
-        string="Triggers",
         help="File patterns and keywords that trigger this skill. "
         "Format: {'file_match': ['*.ts', '*.tsx'], 'keywords': ['security', 'auth']}",
     )
     file_path = fields.Char(
-        string="File Path",
         help="Relative path to the SKILL.md file in the skills directory.",
     )
     content = fields.Text(
-        string="Content",
         help="Cached content of the SKILL.md file.",
     )
     source = fields.Selection(
@@ -65,7 +62,7 @@ class AiSkill(models.Model):
             try:
                 with open(full_path, encoding="utf-8") as f:
                     return f.read()
-            except (FileNotFoundError, IOError):
+            except (OSError, FileNotFoundError):
                 _logger.warning("Skill file not found: %s", full_path)
         return ""
 
@@ -166,7 +163,7 @@ class AiSkill(models.Model):
         try:
             with open(filepath, encoding="utf-8") as f:
                 content = f.read()
-        except (FileNotFoundError, IOError):
+        except (OSError, FileNotFoundError):
             return None
 
         result = {}
@@ -182,7 +179,7 @@ class AiSkill(models.Model):
                     result["name"] = fm.get("name", "")
                     result["description"] = fm.get("description", "")
             except yaml.YAMLError:
-                pass
+                _logger.warning("Invalid YAML front matter in %s", filepath)
 
         # Fallback: extract name from first H1
         if not result.get("name"):

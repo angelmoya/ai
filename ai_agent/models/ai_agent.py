@@ -62,19 +62,13 @@ class AiAgent(models.Model):
         "agent_id",
         string="Threads",
     )
-    thread_count = fields.Integer(
-        compute="_compute_thread_count",
-        string="Thread Count",
-    )
+    thread_count = fields.Integer(compute="_compute_thread_count")
     job_ids = fields.One2many(
         "ai.agent.job",
         "agent_id",
         string="Jobs",
     )
-    job_count = fields.Integer(
-        compute="_compute_job_count",
-        string="Job Count",
-    )
+    job_count = fields.Integer(compute="_compute_job_count")
 
     @api.depends("thread_ids")
     def _compute_thread_count(self):
@@ -146,7 +140,10 @@ class AiAgent(models.Model):
     def _select_connection(self, task_description=""):
         self.ensure_one()
         for rule in self.connection_rule_ids.filtered("active"):
-            if rule.condition and rule.condition.lower() in (task_description or "").lower():
+            if (
+                rule.condition
+                and rule.condition.lower() in (task_description or "").lower()
+            ):
                 return rule.connection_id
         return self.connection_id
 
@@ -223,11 +220,13 @@ class AiAgent(models.Model):
 
     def _build_planning_prompt(self, prompt):
         self.ensure_one()
-        tools_text = "\n".join(f"- {tool.name}: {tool.description}" for tool in self.tool_ids)
+        tools_text = "\n".join(
+            f"- {tool.name}: {tool.description}" for tool in self.tool_ids
+        )
         return (
-            "You are a planning assistant. Given the user request, break it into a list of steps. "
-            "Each step must be a JSON object with 'description' and optionally 'auto_executable' (boolean). "
-            "Return a JSON array of steps.\n\n"
+            "You are a planning assistant. Given the user request, break it into a "
+            "list of steps. Each step must be a JSON object with 'description' and "
+            "optionally 'auto_executable' (boolean). Return a JSON array of steps.\n\n"
             f"Available tools:\n{tools_text}\n\n"
             f"User request: {prompt}"
         )
@@ -240,7 +239,7 @@ class AiAgent(models.Model):
             if isinstance(data, dict) and "steps" in data:
                 return data["steps"]
         except json.JSONDecodeError:
-            pass
+            _logger.warning("Could not parse plan JSON: %s", result)
         # Fallback: treat each non-empty line as a step
         return [
             {"description": line.strip(), "auto_executable": True}

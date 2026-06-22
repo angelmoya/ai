@@ -1,11 +1,9 @@
 # Copyright 2026 SDi - Ángel Moya <amoya@sdi.es>
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
 
-from lxml import etree
 
 from odoo import api, fields, models
 from odoo.tools.mail import html_sanitize, plaintext2html
-
 
 try:
     import markdown
@@ -48,13 +46,19 @@ class IrActionsServer(models.Model):
     ai_update_record_field_id = fields.Many2one(
         "ir.model.fields",
         string="Update Record Field",
-        domain="[('model_id', '=', model_id), ('ttype', 'in', ['char', 'text', 'html'])]",
+        domain=(
+            "[('model_id', '=', model_id), "
+            "('ttype', 'in', ['char', 'text', 'html'])]"
+        ),
         groups="base.group_system",
     )
     ai_context_variable = fields.Char(
         string="Context Variable",
         groups="base.group_system",
-        help="Name of the variable where the response will be stored in the evaluation context.",
+        help=(
+            "Name of the variable where the response will be stored in the "
+            "evaluation context."
+        ),
     )
 
     @api.onchange("model_id")

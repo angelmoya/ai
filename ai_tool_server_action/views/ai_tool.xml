@@ -28,5 +28,6 @@
         name="Create Tool from Server Action"
         parent="ai_tool.ai_menu_root"
         action="ai_tool_server_action_wizard_action"
-        sequence="17" />
+        sequence="17"
+    />
 </odoo>

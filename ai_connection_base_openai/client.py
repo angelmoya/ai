@@ -5,6 +5,7 @@ import json
 import logging
 
 import requests
+
 from odoo.addons.ai_connection.client import AiConnectionClient
 
 _logger = logging.getLogger(__name__)

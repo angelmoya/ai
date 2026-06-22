@@ -2,19 +2,27 @@
 <odoo noupdate="1">
     <record id="category_common" model="ai.skill.category">
         <field name="name">common</field>
-        <field name="description">Cross-framework standards and best practices applicable to all development.</field>
+        <field
+            name="description"
+        >Cross-framework standards and best practices applicable to all development.</field>
     </record>
     <record id="category_flutter" model="ai.skill.category">
         <field name="name">flutter</field>
-        <field name="description">High-density standards for modern Flutter development.</field>
+        <field
+            name="description"
+        >High-density standards for modern Flutter development.</field>
     </record>
     <record id="category_android" model="ai.skill.category">
         <field name="name">android</field>
-        <field name="description">Modern Android development with Jetpack Compose and Hilt.</field>
+        <field
+            name="description"
+        >Modern Android development with Jetpack Compose and Hilt.</field>
     </record>
     <record id="category_angular" model="ai.skill.category">
         <field name="name">angular</field>
-        <field name="description">Modern Angular standards (Standalone components, Signals).</field>
+        <field
+            name="description"
+        >Modern Angular standards (Standalone components, Signals).</field>
     </record>
     <record id="category_react" model="ai.skill.category">
         <field name="name">react</field>
@@ -30,19 +38,27 @@
     </record>
     <record id="category_nextjs" model="ai.skill.category">
         <field name="name">nextjs</field>
-        <field name="description">Modern fullstack React framework standards (App Router).</field>
+        <field
+            name="description"
+        >Modern fullstack React framework standards (App Router).</field>
     </record>
     <record id="category_laravel" model="ai.skill.category">
         <field name="name">laravel</field>
-        <field name="description">Expert standards for scalable Laravel applications.</field>
+        <field
+            name="description"
+        >Expert standards for scalable Laravel applications.</field>
     </record>
     <record id="category_golang" model="ai.skill.category">
         <field name="name">golang</field>
-        <field name="description">High-performance system and backend development with Go.</field>
+        <field
+            name="description"
+        >High-performance system and backend development with Go.</field>
     </record>
     <record id="category_typescript" model="ai.skill.category">
         <field name="name">typescript</field>
-        <field name="description">Modern TypeScript standards for type-safe development.</field>
+        <field
+            name="description"
+        >Modern TypeScript standards for type-safe development.</field>
     </record>
     <record id="category_javascript" model="ai.skill.category">
         <field name="name">javascript</field>
@@ -76,11 +92,15 @@
 
     <record id="skill_weather" model="ai.skill">
         <field name="name">Weather Forecast</field>
-        <field name="description">Get current weather and forecasts for any city using the web_fetch tool to query wttr.in (no API key required).</field>
+        <field
+            name="description"
+        >Get current weather and forecasts for any city using the web_fetch tool to query wttr.in (no API key required).</field>
         <field name="category_id" ref="category_weather" />
         <field name="priority">P1</field>
         <field name="source">custom</field>
-        <field name="content">You have access to the web_fetch tool which can fetch content from URLs.
+        <field
+            name="content"
+        >You have access to the web_fetch tool which can fetch content from URLs.
 
 Use it to get weather data from wttr.in (free, no API key needed).
 

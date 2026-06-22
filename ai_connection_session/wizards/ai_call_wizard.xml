@@ -7,13 +7,23 @@
         <field name="arch" type="xml">
             <form>
                 <group>
-                    <field name="connection_id" readonly="context.get('default_connection_id') or context.get('default_session_id')" />
-                    <field name="session_id" invisible="context.get('default_connection_id') or context.get('default_session_id')" />
+                    <field
+                        name="connection_id"
+                        readonly="context.get('default_connection_id') or context.get('default_session_id')"
+                    />
+                    <field
+                        name="session_id"
+                        invisible="context.get('default_connection_id') or context.get('default_session_id')"
+                    />
                     <field name="prompt" />
                 </group>
                 <footer>
-                    <button name="action_execute" type="object"
-                        string="Execute" class="btn-primary" />
+                    <button
+                        name="action_execute"
+                        type="object"
+                        string="Execute"
+                        class="btn-primary"
+                    />
                     <button special="cancel" string="Cancel" />
                 </footer>
             </form>

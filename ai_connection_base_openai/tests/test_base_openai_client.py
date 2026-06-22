@@ -3,8 +3,9 @@
 
 from unittest.mock import patch
 
-from odoo.addons.ai_connection.client import AiConnectionClient
 from odoo.tests.common import TransactionCase
+
+from odoo.addons.ai_connection.client import AiConnectionClient
 
 from ..client import AiConnectionOpenAIClient
 

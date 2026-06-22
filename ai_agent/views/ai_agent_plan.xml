@@ -24,12 +24,14 @@
                         type="object"
                         string="Approve &amp; Execute"
                         class="btn-primary"
-                        invisible="state != 'pending_approval'" />
+                        invisible="state != 'pending_approval'"
+                    />
                     <button
                         name="action_reject"
                         type="object"
                         string="Reject"
-                        invisible="state not in ('draft', 'pending_approval')" />
+                        invisible="state not in ('draft', 'pending_approval')"
+                    />
                     <field name="state" widget="statusbar" />
                 </header>
                 <sheet>

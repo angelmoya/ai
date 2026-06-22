@@ -21,7 +21,11 @@
                 <field name="category_id" />
                 <field name="source" />
                 <separator />
-                <filter name="active" string="Active" domain="[('active', '=', True)]" />
+                <filter
+                    name="active"
+                    string="Active"
+                    domain="[('active', '=', True)]"
+                />
             </search>
         </field>
     </record>
@@ -31,11 +35,13 @@
         <field name="arch" type="xml">
             <form>
                 <header>
-                    <button name="action_sync_from_disk"
+                    <button
+                        name="action_sync_from_disk"
                         type="object"
                         string="Sync from Disk"
                         class="btn-primary"
-                        confirm="Sync all skills from disk? Existing skills will be updated." />
+                        confirm="Sync all skills from disk? Existing skills will be updated."
+                    />
                 </header>
                 <sheet>
                     <group>
@@ -75,5 +81,4 @@
         <field name="context">{}</field>
         <field name="search_view_id" ref="ai_skill_search_view" />
     </record>
-
 </odoo>

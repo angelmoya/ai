@@ -3,6 +3,8 @@
 
 import logging
 
+from psycopg2 import sql
+
 _logger = logging.getLogger(__name__)
 
 BACKUP_TABLE = "_ai_skill_ai_connection_rel_backup"
@@ -21,8 +23,12 @@ def migrate(cr, version):
         _logger.info("Relation table %s does not exist, nothing to backup", REL_TABLE)
         return
 
-    cr.execute("DROP TABLE IF EXISTS %s" % BACKUP_TABLE)
-    cr.execute("CREATE TABLE %s AS SELECT * FROM %s" % (BACKUP_TABLE, REL_TABLE))
-    cr.execute("SELECT COUNT(*) FROM %s" % BACKUP_TABLE)
+    cr.execute(sql.SQL("DROP TABLE IF EXISTS {}").format(sql.Identifier(BACKUP_TABLE)))
+    cr.execute(
+        sql.SQL("CREATE TABLE {} AS SELECT * FROM {}").format(
+            sql.Identifier(BACKUP_TABLE), sql.Identifier(REL_TABLE)
+        )
+    )
+    cr.execute(sql.SQL("SELECT COUNT(*) FROM {}").format(sql.Identifier(BACKUP_TABLE)))
     count = cr.fetchone()[0]
     _logger.info("Backed up %d rows from %s", count, REL_TABLE)

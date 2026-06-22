@@ -6,47 +6,54 @@
         id="ai_agent_menu"
         name="Agents"
         parent="ai_tool.ai_menu_root"
-        sequence="12" />
+        sequence="12"
+    />
 
     <menuitem
         id="ai_agent_soul_menu"
         name="Souls"
         parent="ai_agent_menu"
         action="ai_agent_soul_act_window"
-        sequence="10" />
+        sequence="10"
+    />
 
     <menuitem
         id="ai_agent_protocol_menu"
         name="Protocols"
         parent="ai_agent_menu"
         action="ai_agent_protocol_act_window"
-        sequence="20" />
+        sequence="20"
+    />
 
     <menuitem
         id="ai_agent_main_menu"
         name="Agents"
         parent="ai_agent_menu"
         action="ai_agent_act_window"
-        sequence="30" />
+        sequence="30"
+    />
 
     <menuitem
         id="ai_agent_thread_menu"
         name="Threads"
         parent="ai_agent_menu"
         action="ai_agent_thread_act_window"
-        sequence="40" />
+        sequence="40"
+    />
 
     <menuitem
         id="ai_agent_plan_menu"
         name="Plans"
         parent="ai_agent_menu"
         action="ai_agent_plan_act_window"
-        sequence="50" />
+        sequence="50"
+    />
 
     <menuitem
         id="ai_agent_job_menu"
         name="Jobs"
         parent="ai_agent_menu"
         action="ai_agent_job_act_window"
-        sequence="60" />
+        sequence="60"
+    />
 </odoo>

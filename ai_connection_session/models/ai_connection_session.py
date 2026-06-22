@@ -15,17 +15,16 @@ class AiConnectionSession(models.Model):
         "ai.connection",
         required=True,
         ondelete="cascade",
-        string="Connection",
     )
-    message_history = fields.Json(string="Message History", default=list)
+    message_history = fields.Json(default=list)
     message_history_formatted = fields.Text(
         string="Message History (Formatted)",
         compute="_compute_message_history_formatted",
         readonly=True,
     )
-    summary = fields.Text(string="Summary")
+    summary = fields.Text()
     call_ids = fields.One2many("ai.connection.call", "session_id", string="Calls")
-    call_count = fields.Integer(compute="_compute_call_count", string="Call Count")
+    call_count = fields.Integer(compute="_compute_call_count")
     last_call_id = fields.Many2one(
         "ai.connection.call",
         compute="_compute_last_call",
@@ -65,7 +64,9 @@ class AiConnectionSession(models.Model):
                 if tool_calls:
                     parts.append("Tool calls:")
                     for tc in tool_calls:
-                        tc_name = tc.get("name") or tc.get("function", {}).get("name", "?")
+                        tc_name = tc.get("name") or tc.get("function", {}).get(
+                            "name", "?"
+                        )
                         parts.append(f"  - {tc_name}: {tc.get('arguments', tc)}")
                 parts.append("")
             record.message_history_formatted = "\n".join(parts)

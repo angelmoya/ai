@@ -1,8 +1,10 @@
 # Common Best Practices
 
-Enforce SOLID principles, guard-clause style, function size limits, and intention-revealing naming across all languages.
+Enforce SOLID principles, guard-clause style, function size limits, and
+intention-revealing naming across all languages.
 
-**Use when**: refactoring for readability, applying clean-code patterns, reviewing naming conventions, or reducing function complexity.
+**Use when**: refactoring for readability, applying clean-code patterns, reviewing
+naming conventions, or reducing function complexity.
 
 ## Rules
 

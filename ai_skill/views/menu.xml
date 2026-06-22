@@ -1,4 +1,9 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <odoo>
-    <menuitem id="ai_skill_menu" name="Skills" parent="ai_tool.ai_menu_root" sequence="10" />
+    <menuitem
+        id="ai_skill_menu"
+        name="Skills"
+        parent="ai_tool.ai_menu_root"
+        sequence="10"
+    />
 </odoo>

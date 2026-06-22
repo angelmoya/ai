@@ -8,23 +8,33 @@
         <field name="inherit_id" ref="ai_connection.ai_connection_form_view" />
         <field name="arch" type="xml">
             <header position="inside">
-                <button name="action_open_call_wizard"
+                <button
+                    name="action_open_call_wizard"
                     type="object"
                     class="btn-primary"
-                    string="Send Prompt" />
+                    string="Send Prompt"
+                />
             </header>
             <xpath expr="//sheet/group[1]" position="before">
                 <div class="oe_button_box" name="button_box">
-                    <button name="%(ai_connection_session_for_connection_act_window)d"
+                    <button
+                        name="%(ai_connection_session_for_connection_act_window)d"
                         type="action"
                         class="oe_stat_button"
-                        icon="fa-comments">
-                        <field name="session_count" widget="statinfo" string="Sessions" />
+                        icon="fa-comments"
+                    >
+                        <field
+                            name="session_count"
+                            widget="statinfo"
+                            string="Sessions"
+                        />
                     </button>
-                    <button name="%(ai_connection_call_act_window)d"
+                    <button
+                        name="%(ai_connection_call_act_window)d"
                         type="action"
                         class="oe_stat_button"
-                        icon="fa-phone">
+                        icon="fa-phone"
+                    >
                         <field name="call_count" widget="statinfo" string="Calls" />
                     </button>
                 </div>

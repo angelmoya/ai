@@ -10,14 +10,18 @@
             <field name="kind" position="after">
                 <field name="url" groups="base.group_system" />
                 <field name="model" groups="base.group_system" />
-                <field name="api_key" password="True"
+                <field
+                    name="api_key"
+                    password="True"
                     invisible="kind not in ('base_openai', 'openai', 'ollama')"
                     groups="base.group_system"
                 />
-                <field name="max_tokens"
+                <field
+                    name="max_tokens"
                     invisible="kind not in ('base_openai', 'openai', 'ollama')"
                 />
-                <field name="temperature"
+                <field
+                    name="temperature"
                     invisible="kind not in ('base_openai', 'openai', 'ollama')"
                 />
             </field>

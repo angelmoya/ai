@@ -25,12 +25,14 @@
                         type="object"
                         string="Run Now"
                         class="btn-primary"
-                        invisible="state == 'running'" />
+                        invisible="state == 'running'"
+                    />
                     <button
                         name="action_reset"
                         type="object"
                         string="Reset"
-                        invisible="state in ('pending', 'running')" />
+                        invisible="state in ('pending', 'running')"
+                    />
                     <field name="state" widget="statusbar" />
                 </header>
                 <sheet>
@@ -42,7 +44,10 @@
                         </group>
                         <group>
                             <field name="trigger_type" />
-                            <field name="cron_id" invisible="trigger_type != 'scheduled'" />
+                            <field
+                                name="cron_id"
+                                invisible="trigger_type != 'scheduled'"
+                            />
                             <field name="active" />
                         </group>
                     </group>

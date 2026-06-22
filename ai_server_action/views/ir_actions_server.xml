@@ -7,9 +7,7 @@
         <field name="inherit_id" ref="base.view_server_action_form" />
         <field name="arch" type="xml">
             <notebook position="inside">
-                <page
-                    string="AI Prompt"
-                    invisible="state != 'ai_run'">
+                <page string="AI Prompt" invisible="state != 'ai_run'">
                     <group>
                         <field name="ai_connection_id" />
                         <field

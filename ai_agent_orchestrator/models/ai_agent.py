@@ -73,8 +73,7 @@ class AiAgent(models.Model):
         self.ensure_one()
         members = self.orchestrator_member_ids
         members_text = "\n".join(
-            f"- {m.role}: {m.agent_id.name} - {m.description or ''}"
-            for m in members
+            f"- {m.role}: {m.agent_id.name} - {m.description or ''}" for m in members
         )
         return (
             "You are an orchestrator. Given the user request, break it into steps "

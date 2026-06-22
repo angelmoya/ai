@@ -24,7 +24,8 @@
                         name="action_run_wizard"
                         type="object"
                         string="Run Agent"
-                        class="btn-primary" />
+                        class="btn-primary"
+                    />
                 </header>
                 <sheet>
                     <group>

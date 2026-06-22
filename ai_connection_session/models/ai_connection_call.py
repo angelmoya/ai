@@ -30,7 +30,7 @@ class AiConnectionCall(models.Model):
     prompt = fields.Text(required=True)
     context = fields.Text(string="System Context")
     response = fields.Text(readonly=True)
-    tool_calls = fields.Json(readonly=True, string="Tool Calls")
+    tool_calls = fields.Json(readonly=True)
     state = fields.Selection(
         [
             ("draft", "Draft"),
@@ -42,9 +42,9 @@ class AiConnectionCall(models.Model):
         required=True,
     )
     error = fields.Text(readonly=True)
-    prompt_tokens = fields.Integer(readonly=True, string="Prompt Tokens")
-    completion_tokens = fields.Integer(readonly=True, string="Completion Tokens")
-    total_tokens = fields.Integer(readonly=True, string="Total Tokens")
+    prompt_tokens = fields.Integer(readonly=True)
+    completion_tokens = fields.Integer(readonly=True)
+    total_tokens = fields.Integer(readonly=True)
     duration = fields.Float(readonly=True, string="Duration (s)")
     model_used = fields.Char(readonly=True)
 

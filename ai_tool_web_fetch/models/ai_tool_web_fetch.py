@@ -4,6 +4,7 @@
 import logging
 
 import requests
+
 from odoo import models
 
 from odoo.addons.ai_tool.tools import aitool

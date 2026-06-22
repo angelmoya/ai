@@ -14,7 +14,6 @@ class AiConnection(models.Model):
         ondelete={"ollama": "cascade"},
     )
     ollama_options = fields.Json(
-        string="Ollama Options",
         help="Additional Ollama options like num_ctx, num_predict, etc.",
     )
 

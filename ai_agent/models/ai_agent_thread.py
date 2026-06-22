@@ -26,20 +26,14 @@ class AiAgentThread(models.Model):
         string="Connection Session",
         readonly=True,
     )
-    message_history = fields.Json(
-        string="Message History",
-        default=list,
-    )
+    message_history = fields.Json(default=list)
     summary = fields.Text()
     call_ids = fields.One2many(
         "ai.connection.call",
         compute="_compute_call_ids",
         string="Calls",
     )
-    call_count = fields.Integer(
-        compute="_compute_call_count",
-        string="Call Count",
-    )
+    call_count = fields.Integer(compute="_compute_call_count")
     plan_ids = fields.One2many(
         "ai.agent.plan",
         "thread_id",

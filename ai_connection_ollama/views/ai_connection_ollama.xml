@@ -8,9 +8,7 @@
         <field name="inherit_id" ref="ai_connection.ai_connection_form_view" />
         <field name="arch" type="xml">
             <field name="kind" position="after">
-                <field name="ollama_options"
-                    invisible="kind != 'ollama'"
-                />
+                <field name="ollama_options" invisible="kind != 'ollama'" />
             </field>
         </field>
     </record>

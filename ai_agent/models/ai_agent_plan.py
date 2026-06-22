@@ -115,7 +115,9 @@ class AiAgentPlanStep(models.Model):
         self.state = "running"
         try:
             agent = self.plan_id.agent_id
-            connection = self.connection_id or agent._select_connection(self.description)
+            connection = self.connection_id or agent._select_connection(
+                self.description
+            )
             system_prompt = agent._build_system_prompt()
             call = self.env["ai.connection.call"].create(
                 {

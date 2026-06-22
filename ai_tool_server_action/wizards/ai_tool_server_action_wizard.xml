@@ -17,7 +17,8 @@
                         name="action_create_tool"
                         type="object"
                         string="Create AI Tool"
-                        class="btn-primary" />
+                        class="btn-primary"
+                    />
                     <button special="cancel" string="Cancel" />
                 </footer>
             </form>
