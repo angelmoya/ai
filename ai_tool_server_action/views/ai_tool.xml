@@ -13,11 +13,11 @@
         </field>
     </record>
 
-    <record model="ir.ui.view" id="ai_tool_tree_view_server_action">
+    <record model="ir.ui.view" id="ai_tool_list_view_server_action">
         <field name="model">ai.tool</field>
-        <field name="inherit_id" ref="ai_tool.ai_tool_tree_view" />
+        <field name="inherit_id" ref="ai_tool.ai_tool_list_view" />
         <field name="arch" type="xml">
-            <field name="kind" position="after">
+            <field name="name" position="after">
                 <field name="is_server_action" />
             </field>
         </field>
