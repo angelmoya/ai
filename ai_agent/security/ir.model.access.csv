@@ -1,0 +1,17 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_ai_agent_soul_user,ai.agent.soul user,model_ai_agent_soul,base.group_user,1,0,0,0
+access_ai_agent_soul_manager,ai.agent.soul manager,model_ai_agent_soul,base.group_system,1,1,1,1
+access_ai_agent_protocol_user,ai.agent.protocol user,model_ai_agent_protocol,base.group_user,1,0,0,0
+access_ai_agent_protocol_manager,ai.agent.protocol manager,model_ai_agent_protocol,base.group_system,1,1,1,1
+access_ai_agent_connection_rule_manager,ai.agent.connection.rule manager,model_ai_agent_connection_rule,base.group_system,1,1,1,1
+access_ai_agent_user,ai.agent user,model_ai_agent,base.group_user,1,0,0,0
+access_ai_agent_manager,ai.agent manager,model_ai_agent,base.group_system,1,1,1,1
+access_ai_agent_thread_user,ai.agent.thread user,model_ai_agent_thread,base.group_user,1,1,1,0
+access_ai_agent_thread_manager,ai.agent.thread manager,model_ai_agent_thread,base.group_system,1,1,1,1
+access_ai_agent_plan_user,ai.agent.plan user,model_ai_agent_plan,base.group_user,1,1,1,0
+access_ai_agent_plan_manager,ai.agent.plan manager,model_ai_agent_plan,base.group_system,1,1,1,1
+access_ai_agent_plan_step_user,ai.agent.plan.step user,model_ai_agent_plan_step,base.group_user,1,1,1,0
+access_ai_agent_plan_step_manager,ai.agent.plan.step manager,model_ai_agent_plan_step,base.group_system,1,1,1,1
+access_ai_agent_job_user,ai.agent.job user,model_ai_agent_job,base.group_user,1,0,0,0
+access_ai_agent_job_manager,ai.agent.job manager,model_ai_agent_job,base.group_system,1,1,1,1
+access_ai_agent_run_wizard_user,ai.agent.run.wizard user,model_ai_agent_run_wizard,base.group_user,1,1,1,0

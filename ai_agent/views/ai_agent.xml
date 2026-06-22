@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2026 SDi - Ángel Moya <amoya@sdi.es>
+     License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <record model="ir.ui.view" id="ai_agent_tree_view">
+        <field name="model">ai.agent</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name" />
+                <field name="connection_id" />
+                <field name="planning_enabled" />
+                <field name="active" />
+            </list>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="ai_agent_form_view">
+        <field name="model">ai.agent</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button
+                        name="action_run_wizard"
+                        type="object"
+                        string="Run Agent"
+                        class="btn-primary" />
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button
+                            name="action_open_threads"
+                            type="object"
+                            class="oe_stat_button"
+                            icon="fa-comments">
+                            <field name="thread_count" widget="statinfo" string="Threads" />
+                        </button>
+                        <button
+                            name="action_open_jobs"
+                            type="object"
+                            class="oe_stat_button"
+                            icon="fa-clock-o">
+                            <field name="job_count" widget="statinfo" string="Jobs" />
+                        </button>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="name" />
+                            <field name="soul_id" />
+                            <field name="connection_id" />
+                            <field name="active" />
+                        </group>
+                        <group>
+                            <field name="planning_enabled" />
+                            <field name="plan_requires_approval" invisible="not planning_enabled" />
+                        </group>
+                    </group>
+                    <group string="Goal">
+                        <field name="goal" nolabel="1" />
+                    </group>
+                    <notebook>
+                        <page string="Protocols">
+                            <field name="protocol_ids" nolabel="1" />
+                        </page>
+                        <page string="Skills">
+                            <field name="skill_ids" nolabel="1" />
+                        </page>
+                        <page string="Tools">
+                            <field name="tool_ids" nolabel="1" />
+                        </page>
+                        <page string="Connections">
+                            <field name="connection_ids" nolabel="1" />
+                            <field name="connection_rule_ids" nolabel="1" />
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="ai_agent_act_window">
+        <field name="name">AI Agents</field>
+        <field name="res_model">ai.agent</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>

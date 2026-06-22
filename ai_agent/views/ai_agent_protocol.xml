@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2026 SDi - Ángel Moya <amoya@sdi.es>
+     License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <record model="ir.ui.view" id="ai_agent_protocol_tree_view">
+        <field name="model">ai.agent.protocol</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name" />
+                <field name="protocol_type" />
+                <field name="action" />
+                <field name="active" />
+            </list>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="ai_agent_protocol_form_view">
+        <field name="model">ai.agent.protocol</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name" />
+                            <field name="protocol_type" />
+                            <field name="action" />
+                            <field name="active" />
+                        </group>
+                        <group>
+                            <field name="condition" />
+                            <field name="message" />
+                        </group>
+                    </group>
+                    <group string="Content">
+                        <field name="content" nolabel="1" />
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="ai_agent_protocol_act_window">
+        <field name="name">AI Agent Protocols</field>
+        <field name="res_model">ai.agent.protocol</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>

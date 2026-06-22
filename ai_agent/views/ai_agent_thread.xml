@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2026 SDi - Ángel Moya <amoya@sdi.es>
+     License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <record model="ir.ui.view" id="ai_agent_thread_tree_view">
+        <field name="model">ai.agent.thread</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name" />
+                <field name="agent_id" />
+                <field name="user_id" />
+                <field name="call_count" />
+                <field name="active" />
+            </list>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="ai_agent_thread_form_view">
+        <field name="model">ai.agent.thread</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button
+                        name="action_run_wizard"
+                        type="object"
+                        string="Run Agent"
+                        class="btn-primary" />
+                </header>
+                <sheet>
+                    <group>
+                        <field name="name" />
+                        <field name="agent_id" />
+                        <field name="user_id" />
+                        <field name="active" />
+                    </group>
+                    <group string="Summary">
+                        <field name="summary" nolabel="1" />
+                    </group>
+                    <notebook>
+                        <page string="Message History">
+                            <field name="message_history" nolabel="1" widget="jsonb" />
+                        </page>
+                        <page string="Calls">
+                            <field name="call_ids" nolabel="1" />
+                        </page>
+                        <page string="Plans">
+                            <field name="plan_ids" nolabel="1" />
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="ai_agent_thread_act_window">
+        <field name="name">AI Agent Threads</field>
+        <field name="res_model">ai.agent.thread</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>

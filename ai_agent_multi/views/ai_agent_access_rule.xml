@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2026 SDi - Ángel Moya <amoya@sdi.es>
+     License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <record model="ir.ui.view" id="ai_agent_access_rule_tree_view">
+        <field name="model">ai.agent.access.rule</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="agent_id" />
+                <field name="user_id" />
+                <field name="group_id" />
+            </list>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="ai_agent_access_rule_form_view">
+        <field name="model">ai.agent.access.rule</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="agent_id" />
+                        <field name="user_id" />
+                        <field name="group_id" />
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="ai_agent_access_rule_act_window">
+        <field name="name">AI Agent Access Rules</field>
+        <field name="res_model">ai.agent.access.rule</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <menuitem
+        id="ai_agent_access_rule_menu"
+        name="Access Rules"
+        parent="ai_agent.ai_agent_menu"
+        action="ai_agent_access_rule_act_window"
+        sequence="70" />
+</odoo>

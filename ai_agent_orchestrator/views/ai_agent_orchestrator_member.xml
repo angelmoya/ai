@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2026 SDi - Ángel Moya <amoya@sdi.es>
+     License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <record model="ir.ui.view" id="ai_agent_orchestrator_member_tree_view">
+        <field name="model">ai.agent.orchestrator.member</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="orchestrator_id" />
+                <field name="agent_id" />
+                <field name="role" />
+                <field name="sequence" />
+            </list>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="ai_agent_orchestrator_member_form_view">
+        <field name="model">ai.agent.orchestrator.member</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="orchestrator_id" />
+                        <field name="agent_id" />
+                        <field name="role" />
+                        <field name="sequence" />
+                        <field name="description" />
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="ai_agent_orchestrator_member_act_window">
+        <field name="name">Orchestrator Members</field>
+        <field name="res_model">ai.agent.orchestrator.member</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2026 SDi - Ángel Moya <amoya@sdi.es>
+     License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <record model="ir.ui.view" id="ai_agent_run_wizard_form_view">
+        <field name="model">ai.agent.run.wizard</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <field name="agent_id" readonly="context.get('default_agent_id')" />
+                    <field name="thread_id" invisible="not context.get('default_thread_id')" />
+                    <field name="prompt" />
+                </group>
+                <footer>
+                    <button
+                        name="action_run"
+                        type="object"
+                        string="Run"
+                        class="btn-primary" />
+                    <button special="cancel" string="Cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

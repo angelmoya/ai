@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2026 SDi - Ángel Moya <amoya@sdi.es>
+     License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <record model="ir.ui.view" id="ai_agent_form_view_orchestrator">
+        <field name="model">ai.agent</field>
+        <field name="inherit_id" ref="ai_agent.ai_agent_form_view" />
+        <field name="arch" type="xml">
+            <field name="planning_enabled" position="after">
+                <field name="is_orchestrator" />
+            </field>
+            <notebook position="inside">
+                <page string="Orchestrator Members" invisible="not is_orchestrator">
+                    <field name="orchestrator_member_ids" nolabel="1" />
+                </page>
+            </notebook>
+        </field>
+    </record>
+</odoo>
