@@ -76,51 +76,48 @@ class AiConnectionCall(models.Model):
                 messages.append({"role": "user", "content": self.prompt})
 
             tools_to_use = connection.tool_ids if connection.tool_ids else None
-            client = getattr(connection, f"_get_client_{connection.kind}")(tools_to_use)
+            client = getattr(
+                connection, f"_get_client_{connection.kind}"
+            )(tools_to_use)
 
             accumulated_prompt_tokens = 0
             accumulated_completion_tokens = 0
             iteration = 0
             message = {}
-            parsed = None
             first_tool_calls = None
 
             while iteration < max_iterations:
                 iteration += 1
 
-                raw = client._send_request(client._build_payload(messages))
-                parsed = client._parse_response(raw)
+                parsed = client.handle_message(messages=messages)
                 message = parsed["message"]
                 usage = parsed.get("usage", {})
 
                 accumulated_prompt_tokens += usage.get("prompt_tokens", 0)
                 accumulated_completion_tokens += usage.get("completion_tokens", 0)
 
-                if iteration == 1 and parsed.get("tool_calls"):
-                    first_tool_calls = parsed["tool_calls"]
+                tool_calls = parsed.get("tool_calls") or []
+                if iteration == 1 and tool_calls:
+                    first_tool_calls = tool_calls
 
-                if not parsed.get("tool_calls"):
+                if not tool_calls:
                     break
 
-                tool_calls = parsed["tool_calls"]
                 tool_results = self._execute_tool_calls(tool_calls)
-
                 messages.append(
                     {
                         "role": "assistant",
                         "content": message.get("content") or "",
                         "tool_calls": [
                             {
-                                "id": tc["id"],
-                                "type": tc["type"],
+                                "id": tc.get("id", f"call_{i}"),
+                                "type": "function",
                                 "function": {
-                                    "name": tc["function"]["name"],
-                                    "arguments": json.dumps(
-                                        tc["function"]["arguments"]
-                                    ),
+                                    "name": tc["name"],
+                                    "arguments": json.dumps(tc["arguments"]),
                                 },
                             }
-                            for tc in tool_calls
+                            for i, tc in enumerate(tool_calls)
                         ],
                     }
                 )
@@ -143,7 +140,7 @@ class AiConnectionCall(models.Model):
                     "completion_tokens": accumulated_completion_tokens,
                     "total_tokens": accumulated_prompt_tokens
                     + accumulated_completion_tokens,
-                    "model_used": parsed.get("model") or connection.model,
+                    "model_used": message.get("model", connection.model),
                     "state": "done",
                     "duration": time.time() - start_time,
                 }
@@ -162,8 +159,13 @@ class AiConnectionCall(models.Model):
         self.ensure_one()
         results = []
         for tc in tool_calls:
-            name = tc["function"]["name"]
-            arguments = tc["function"]["arguments"]
+            name = tc["name"]
+            arguments = tc["arguments"]
+            if isinstance(arguments, str):
+                try:
+                    arguments = json.loads(arguments)
+                except json.JSONDecodeError:
+                    pass
             try:
                 output = self._execute_tool_call(name, arguments)
                 content = json.dumps(output) if output else "done"
@@ -173,7 +175,7 @@ class AiConnectionCall(models.Model):
             results.append(
                 {
                     "role": "tool",
-                    "tool_call_id": tc["id"],
+                    "tool_call_id": tc.get("id", ""),
                     "content": content,
                 }
             )

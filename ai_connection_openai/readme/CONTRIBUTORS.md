@@ -1,2 +1,0 @@
-- [SDi](https://sdi.es)
-  - Angel Moya

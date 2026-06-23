@@ -9,7 +9,7 @@
     "author": "SDi,Odoo Community Association (OCA)",
     "website": "https://github.com/OCA/ai",
     "depends": [
-        "ai_connection_base_openai",
+        "ai_connection",
         "ai_tool",
         "ai_skill",
     ],

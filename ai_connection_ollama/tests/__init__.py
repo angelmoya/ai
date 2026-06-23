@@ -1,1 +1,1 @@
-from . import test_ollama_connection
+from . import test_ollama

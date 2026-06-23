@@ -75,7 +75,7 @@ class IrActionsServer(models.Model):
             prompt,
             tools=self.ai_tool_ids,
             record=record,
-        )
+        )[0]
         self._post_run_action_ai_run(result, eval_context, record)
         return result
 

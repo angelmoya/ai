@@ -39,7 +39,7 @@ class AiAgent(models.Model):
         )
         # Generate steps via the orchestrator connection
         plan_prompt = self._build_orchestration_prompt(prompt)
-        result = self.connection_id._run(plan_prompt, tools=None)
+        result = self.connection_id._run(plan_prompt, tools=None)[0]
         steps = self._parse_orchestration_plan(result)
         for idx, step_data in enumerate(steps, start=1):
             member = self._resolve_member(step_data.get("role"))

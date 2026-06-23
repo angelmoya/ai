@@ -204,7 +204,7 @@ class AiAgent(models.Model):
         # Generate steps via the default connection with a planning prompt
         connection = self.connection_id
         plan_prompt = self._build_planning_prompt(prompt)
-        result = connection._run(plan_prompt, tools=None)
+        result = connection._run(plan_prompt, tools=None)[0]
         steps = self._parse_plan(result)
         for idx, step_data in enumerate(steps, start=1):
             self.env["ai.agent.plan.step"].create(

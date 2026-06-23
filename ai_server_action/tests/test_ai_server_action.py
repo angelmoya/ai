@@ -5,15 +5,14 @@ from unittest.mock import patch
 
 from odoo.tests.common import TransactionCase
 
-PATCH_SEND = (
-    "odoo.addons.ai_connection_base_openai.client.AiConnectionOpenAIClient._send_request"
-)
+PATCH_CHAT = "ollama.Client.chat"
 
 
 def _fake_response(content):
     return {
-        "choices": [{"message": {"role": "assistant", "content": content}}],
-        "usage": {},
+        "message": {"role": "assistant", "content": content},
+        "prompt_eval_count": 5,
+        "eval_count": 3,
     }
 
 
@@ -26,10 +25,9 @@ class TestAiServerAction(TransactionCase):
         self.connection = self.env["ai.connection"].create(
             {
                 "name": "Test Connection",
-                "kind": "base_openai",
-                "url": "https://api.example.com/v1",
-                "model": "gpt-4o",
-                "api_key": "test-key",
+                "kind": "ollama",
+                "url": "http://localhost:11434",
+                "model": "llama3",
             }
         )
 
@@ -54,7 +52,7 @@ class TestAiServerAction(TransactionCase):
     def test_run_action_returns_llm_response(self):
         action = self._create_action()
         partner = self.env["res.partner"].create({"name": "Test Partner"})
-        with patch(PATCH_SEND, return_value=_fake_response("Hello from AI")):
+        with patch(PATCH_CHAT, return_value=_fake_response("Hello from AI")):
             result = action._run_action_ai_run({"record": partner})
         self.assertEqual(result, "Hello from AI")
 
@@ -66,7 +64,7 @@ class TestAiServerAction(TransactionCase):
         )
         action.ai_update_record_field_id = field.id
         partner = self.env["res.partner"].create({"name": "Test Partner"})
-        with patch(PATCH_SEND, return_value=_fake_response("Updated by AI")):
+        with patch(PATCH_CHAT, return_value=_fake_response("Updated by AI")):
             action._run_action_ai_run({"record": partner})
         self.assertIn("Updated by AI", partner.comment)
 
@@ -75,6 +73,6 @@ class TestAiServerAction(TransactionCase):
         action.ai_context_variable = "ai_result"
         partner = self.env["res.partner"].create({"name": "Test Partner"})
         context = {"record": partner}
-        with patch(PATCH_SEND, return_value=_fake_response("Stored result")):
+        with patch(PATCH_CHAT, return_value=_fake_response("Stored result")):
             action._run_action_ai_run(context)
         self.assertEqual(context["ai_result"], "Stored result")

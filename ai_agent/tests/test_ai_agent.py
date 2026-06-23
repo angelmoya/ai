@@ -5,31 +5,26 @@ from unittest.mock import patch
 
 from odoo.tests.common import TransactionCase
 
-PATCH_SEND = (
-    "odoo.addons.ai_connection_base_openai.client.AiConnectionOpenAIClient._send_request"
-)
+PATCH_CHAT = "ollama.Client.chat"
 
 RESPONSE_HELLO = {
-    "choices": [{"message": {"role": "assistant", "content": "Hello!"}}],
-    "usage": {},
+    "message": {"role": "assistant", "content": "Hello!"},
+    "prompt_eval_count": 5,
+    "eval_count": 3,
 }
 RESPONSE_PLAN = {
-    "choices": [
-        {
-            "message": {
-                "role": "assistant",
-                "content": '[{"description": "step 1"}]',
-            }
-        }
-    ],
-    "usage": {},
+    "message": {
+        "role": "assistant",
+        "content": '[{"description": "step 1"}]',
+    },
+    "prompt_eval_count": 10,
+    "eval_count": 5,
 }
 RESPONSE_DONE = {
-    "choices": [{"message": {"role": "assistant", "content": "Done"}}],
-    "usage": {},
+    "message": {"role": "assistant", "content": "Done"},
+    "prompt_eval_count": 3,
+    "eval_count": 2,
 }
-
-
 
 
 class TestAiAgent(TransactionCase):
@@ -38,10 +33,9 @@ class TestAiAgent(TransactionCase):
         self.connection = self.env["ai.connection"].create(
             {
                 "name": "Test Connection",
-                "kind": "base_openai",
-                "url": "https://api.example.com/v1",
-                "model": "gpt-4o",
-                "api_key": "test-key",
+                "kind": "ollama",
+                "url": "http://localhost:11434",
+                "model": "llama3",
             }
         )
         self.agent = self.env["ai.agent"].create(
@@ -63,7 +57,6 @@ class TestAiAgent(TransactionCase):
         self.assertTrue(thread.exists())
         self.assertEqual(thread.agent_id, self.agent)
         self.assertEqual(thread.user_id, user)
-        # Second call returns same thread
         thread2 = self.agent._get_or_create_thread(user)
         self.assertEqual(thread, thread2)
 
@@ -73,7 +66,7 @@ class TestAiAgent(TransactionCase):
 
     def test_run_prompt(self):
         user = self.env.user
-        with patch(PATCH_SEND, return_value=RESPONSE_HELLO):
+        with patch(PATCH_CHAT, return_value=RESPONSE_HELLO):
             call = self.agent.run("Say hi", user=user)
         self.assertEqual(call._name, "ai.connection.call")
         self.assertEqual(call.response, "Hello!")
@@ -83,7 +76,7 @@ class TestAiAgent(TransactionCase):
         self.agent.planning_enabled = True
         self.agent.plan_requires_approval = False
         user = self.env.user
-        with patch(PATCH_SEND, side_effect=[RESPONSE_PLAN, RESPONSE_DONE]):
+        with patch(PATCH_CHAT, side_effect=[RESPONSE_PLAN, RESPONSE_DONE]):
             plan = self.agent.run("Do something", user=user)
         self.assertEqual(plan._name, "ai.agent.plan")
         self.assertEqual(plan.state, "done")
@@ -98,7 +91,7 @@ class TestAiAgent(TransactionCase):
                 "prompt": "Say hi",
             }
         )
-        with patch(PATCH_SEND, return_value=RESPONSE_HELLO):
+        with patch(PATCH_CHAT, return_value=RESPONSE_HELLO):
             job.action_run()
         self.assertEqual(job.state, "done")
         self.assertEqual(job.last_result, "Hello!")

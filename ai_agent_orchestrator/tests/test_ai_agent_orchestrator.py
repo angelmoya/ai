@@ -5,27 +5,21 @@ from unittest.mock import patch
 
 from odoo.tests.common import TransactionCase
 
-PATCH_SEND = (
-    "odoo.addons.ai_connection_base_openai.client.AiConnectionOpenAIClient._send_request"
-)
+PATCH_CHAT = "ollama.Client.chat"
 
 RESPONSE_ORCH_PLAN = {
-    "choices": [
-        {
-            "message": {
-                "role": "assistant",
-                "content": '[{"role": "worker", "description": "do work"}]',
-            }
-        }
-    ],
-    "usage": {},
+    "message": {
+        "role": "assistant",
+        "content": '[{"role": "worker", "description": "do work"}]',
+    },
+    "prompt_eval_count": 10,
+    "eval_count": 5,
 }
 RESPONSE_DONE = {
-    "choices": [{"message": {"role": "assistant", "content": "Done"}}],
-    "usage": {},
+    "message": {"role": "assistant", "content": "Done"},
+    "prompt_eval_count": 3,
+    "eval_count": 2,
 }
-
-
 
 
 class TestAiAgentOrchestrator(TransactionCase):
@@ -34,10 +28,9 @@ class TestAiAgentOrchestrator(TransactionCase):
         self.connection = self.env["ai.connection"].create(
             {
                 "name": "Test Connection",
-                "kind": "base_openai",
-                "url": "https://api.example.com/v1",
-                "model": "gpt-4o",
-                "api_key": "test-key",
+                "kind": "ollama",
+                "url": "http://localhost:11434",
+                "model": "llama3",
             }
         )
         self.member_agent = self.env["ai.agent"].create(
@@ -75,7 +68,10 @@ class TestAiAgentOrchestrator(TransactionCase):
 
     def test_orchestrator_run(self):
         user = self.env.user
-        with patch(PATCH_SEND, side_effect=[RESPONSE_ORCH_PLAN, RESPONSE_DONE]):
+        with patch(
+            PATCH_CHAT,
+            side_effect=[RESPONSE_ORCH_PLAN, RESPONSE_DONE],
+        ):
             plan = self.orchestrator.run("Do work", user=user)
         self.assertEqual(plan._name, "ai.agent.plan")
         self.assertEqual(plan.state, "done")
