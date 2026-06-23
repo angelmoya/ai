@@ -109,6 +109,11 @@ class IrActionsServer(models.Model):
         elif self.ai_output_mode == "store_variable":
             if self.ai_context_variable:
                 eval_context[self.ai_context_variable] = result
+                # Also merge into Odoo context so chained actions can access it
+                self = self.with_context(
+                    **{self.ai_context_variable: result}
+                )
+                eval_context["env"].context = self._context
 
     def _prepare_message_body(self, result):
         if markdown:
