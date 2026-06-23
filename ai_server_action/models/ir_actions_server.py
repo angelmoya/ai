@@ -3,7 +3,7 @@
 
 
 from odoo import api, fields, models
-from odoo.tools.mail import html_sanitize, plaintext2html
+from odoo.tools.mail import html2plaintext, html_sanitize, plaintext2html
 
 try:
     import markdown
@@ -92,9 +92,7 @@ class IrActionsServer(models.Model):
     def _html_to_text(self, html):
         if not html:
             return ""
-        if markdown:
-            return html
-        return plaintext2html(html)
+        return html2plaintext(html)
 
     def _post_run_action_ai_run(self, result, eval_context, record):
         self.ensure_one()

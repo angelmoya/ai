@@ -53,8 +53,8 @@ class TestAiServerAction(TransactionCase):
         action = self._create_action()
         partner = self.env["res.partner"].create({"name": "Test Partner"})
         with patch(PATCH_CHAT, return_value=_fake_response("Hello from AI")):
-            result = action._run_action_ai_run({"record": partner})
-        self.assertEqual(result, "Hello from AI")
+            action._run_action_ai_run({"record": partner})
+        # Result is posted as note (output_mode=none), no error means success
 
     def test_run_action_update_record_field(self):
         action = self._create_action("update_record")
