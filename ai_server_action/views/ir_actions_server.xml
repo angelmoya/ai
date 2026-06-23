@@ -6,8 +6,12 @@
         <field name="model">ir.actions.server</field>
         <field name="inherit_id" ref="base.view_server_action_form" />
         <field name="arch" type="xml">
-            <notebook position="inside">
-                <page string="AI Prompt" invisible="state != 'ai_run'">
+            <notebook position="after">
+                <group
+                    string="AI Prompt"
+                    name="ai_prompt_group"
+                    invisible="state != 'ai_run'"
+                >
                     <group>
                         <field name="ai_connection_id" />
                         <field
@@ -31,7 +35,7 @@
                         class="oe-bordered-editor"
                         options="{'style-inline': true, 'codeview': true, 'dynamic_placeholder': true}"
                     />
-                </page>
+                </group>
             </notebook>
         </field>
     </record>
