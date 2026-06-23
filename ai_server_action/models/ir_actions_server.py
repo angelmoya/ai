@@ -1,9 +1,10 @@
+# Copyright 2026 Dixmit
 # Copyright 2026 SDi - Ángel Moya <amoya@sdi.es>
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
 
-
 from odoo import api, fields, models
 from odoo.tools.mail import html2plaintext, html_sanitize, plaintext2html
+
 
 try:
     import markdown
@@ -15,8 +16,8 @@ class IrActionsServer(models.Model):
     _inherit = "ir.actions.server"
 
     state = fields.Selection(
-        selection_add=[("ai_run", "Run AI Prompt")],
-        ondelete={"ai_run": "cascade"},
+        selection_add=[("ai_oca", "Run AI Prompt")],
+        ondelete={"ai_oca": "cascade"},
     )
     ai_connection_id = fields.Many2one(
         "ai.connection",
@@ -31,6 +32,9 @@ class IrActionsServer(models.Model):
     ai_prompt = fields.Html(
         string="AI Prompt",
         sanitize=False,
+    )
+    mailing_model_real = fields.Char(
+        compute="_compute_mailing_model_real",
     )
     ai_output_mode = fields.Selection(
         [
@@ -56,17 +60,19 @@ class IrActionsServer(models.Model):
         string="Context Variable",
         groups="base.group_system",
         help=(
-            "Name of the variable where the response will be stored in the "
-            "evaluation context."
+            "Name of the variable where the response will be stored "
+            "in the evaluation context."
         ),
     )
 
-    @api.onchange("model_id")
-    def _onchange_model_id_ai_server_action(self):
-        for action in self:
-            action.ai_update_record_field_id = False
+    @api.depends("model_id")
+    def _compute_mailing_model_real(self):
+        for record in self:
+            record.mailing_model_real = (
+                record.model_id.model if record.model_id else False
+            )
 
-    def _run_action_ai_run(self, eval_context=None):
+    def _run_action_ai_oca(self, eval_context=None):
         self.ensure_one()
         eval_context = eval_context or {}
         record = eval_context.get("record")
@@ -87,12 +93,7 @@ class IrActionsServer(models.Model):
                     prompt, record._name, record.ids
                 )[record.id]
             )
-        return self._html_to_text(prompt)
-
-    def _html_to_text(self, html):
-        if not html:
-            return ""
-        return html2plaintext(html)
+        return html2plaintext(prompt)
 
     def _post_run_action_ai_run(self, result, eval_context, record):
         self.ensure_one()
@@ -109,11 +110,6 @@ class IrActionsServer(models.Model):
         elif self.ai_output_mode == "store_variable":
             if self.ai_context_variable:
                 eval_context[self.ai_context_variable] = result
-                # Also merge into Odoo context so chained actions can access it
-                self = self.with_context(
-                    **{self.ai_context_variable: result}
-                )
-                eval_context["env"].context = self._context
 
     def _prepare_message_body(self, result):
         if markdown:

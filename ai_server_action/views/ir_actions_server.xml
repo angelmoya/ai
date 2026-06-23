@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<!-- Copyright 2026 SDi - Ángel Moya <amoya@sdi.es>
+<!-- Copyright 2026 Dixmit
      License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
 <odoo>
-    <record model="ir.ui.view" id="view_server_action_form_ai_run">
+    <record model="ir.ui.view" id="view_server_action_form_ai_oca">
         <field name="model">ir.actions.server</field>
         <field name="inherit_id" ref="base.view_server_action_form" />
         <field name="arch" type="xml">
@@ -10,7 +10,7 @@
                 <group
                     string="AI Prompt"
                     name="ai_prompt_group"
-                    invisible="state != 'ai_run'"
+                    invisible="state != 'ai_oca'"
                 >
                     <group>
                         <field name="ai_connection_id" />

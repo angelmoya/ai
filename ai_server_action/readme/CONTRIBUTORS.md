@@ -1,1 +1,4 @@
-- Ángel Moya <amoya@sdi.es>
+- [Dixmit](https://www.dixmit.com)
+  - Enric Tobella
+- [SDi](https://sdi.es)
+  - Angel Moya
