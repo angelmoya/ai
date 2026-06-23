@@ -77,7 +77,6 @@ class IrActionsServer(models.Model):
             record=record,
         )[0]
         self._post_run_action_ai_run(result, eval_context, record)
-        return result
 
     def _get_ai_prompt(self, record):
         self.ensure_one()
