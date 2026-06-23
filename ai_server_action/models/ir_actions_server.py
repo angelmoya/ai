@@ -101,7 +101,10 @@ class IrActionsServer(models.Model):
             record.message_post(body=body)
         elif self.ai_output_mode == "update_record":
             if record and self.ai_update_record_field_id:
-                value = self._prepare_message_body(result) if markdown else result
+                if markdown and self.ai_update_record_field_id.ttype == "html":
+                    value = self._prepare_message_body(result)
+                else:
+                    value = result
                 record.write({self.ai_update_record_field_id.name: value})
         elif self.ai_output_mode == "store_variable":
             if self.ai_context_variable:
