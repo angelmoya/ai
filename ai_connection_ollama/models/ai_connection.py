@@ -64,7 +64,7 @@ class AiConnection(models.Model):
         selection_add=[("ollama", "Ollama")],
         ondelete={"ollama": "cascade"},
     )
-    api_key = fields.Char(groups="base.group_system", password=True)
+    api_key = fields.Char(groups="base.group_system")
     ollama_options = fields.Json(
         help="Additional Ollama options like num_ctx, num_predict, etc.",
     )
