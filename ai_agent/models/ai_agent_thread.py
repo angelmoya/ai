@@ -18,8 +18,13 @@ class AiAgentThread(models.Model):
     )
     user_id = fields.Many2one(
         "res.users",
-        required=True,
+        required=False,
         ondelete="cascade",
+    )
+    channel_id = fields.Many2one(
+        "discuss.channel",
+        string="Channel",
+        ondelete="set null",
     )
     session_id = fields.Many2one(
         "ai.connection.session",

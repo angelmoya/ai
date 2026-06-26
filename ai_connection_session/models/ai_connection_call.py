@@ -28,6 +28,8 @@ class AiConnectionCall(models.Model):
         string="Session",
     )
     prompt = fields.Text(required=True)
+    files = fields.Json(string="Files", default=None)
+    tool_ids = fields.Many2many("ai.tool", string="Tools")
     context = fields.Text(string="System Context")
     response = fields.Text(readonly=True)
     tool_calls = fields.Json(readonly=True)
@@ -64,18 +66,23 @@ class AiConnectionCall(models.Model):
             system_content = "\n\n".join(system_parts) if system_parts else ""
 
             session = self.session_id
+            user_msg = {"role": "user", "content": self.prompt}
+            if self.files:
+                user_msg["files"] = self.files
             if session:
                 messages = list(session.message_history or [])
                 if system_content:
                     messages.append({"role": "system", "content": system_content})
-                messages.append({"role": "user", "content": self.prompt})
+                messages.append(user_msg)
             else:
                 messages = []
                 if system_content:
                     messages.append({"role": "system", "content": system_content})
-                messages.append({"role": "user", "content": self.prompt})
+                messages.append(user_msg)
 
-            tools_to_use = connection.tool_ids if connection.tool_ids else None
+            tools_to_use = self.tool_ids if self.tool_ids else connection.tool_ids
+            if not tools_to_use:
+                tools_to_use = None
             client = getattr(
                 connection, f"_get_client_{connection.kind}"
             )(tools_to_use)

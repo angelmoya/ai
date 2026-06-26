@@ -116,12 +116,34 @@ class AiAgent(models.Model):
                 parts.append("# Skills\n\n" + "\n\n".join(skill_parts))
         return "\n\n".join(parts)
 
-    def _get_or_create_thread(self, user):
+    def _get_or_create_thread(self, user=None, channel=None):
         self.ensure_one()
+        if channel:
+            thread = self.env["ai.agent.thread"].search(
+                [
+                    ("agent_id", "=", self.id),
+                    ("channel_id", "=", channel.id),
+                    ("active", "=", True),
+                ],
+                limit=1,
+                order="id desc",
+            )
+            if not thread:
+                thread = self.env["ai.agent.thread"].create(
+                    {
+                        "name": f"{self.name} - {channel.name}",
+                        "agent_id": self.id,
+                        "channel_id": channel.id,
+                        "user_id": user.id if user else self.env.user.id,
+                    }
+                )
+            elif user:
+                thread.user_id = user.id
+            return thread
         thread = self.env["ai.agent.thread"].search(
             [
                 ("agent_id", "=", self.id),
-                ("user_id", "=", user.id),
+                ("user_id", "=", user.id if user else self.env.user.id),
                 ("active", "=", True),
             ],
             limit=1,
@@ -130,9 +152,9 @@ class AiAgent(models.Model):
         if not thread:
             thread = self.env["ai.agent.thread"].create(
                 {
-                    "name": f"{self.name} - {user.name}",
+                    "name": f"{self.name} - {user.name}" if user else self.name,
                     "agent_id": self.id,
-                    "user_id": user.id,
+                    "user_id": user.id if user else self.env.user.id,
                 }
             )
         return thread
@@ -151,7 +173,7 @@ class AiAgent(models.Model):
         self.ensure_one()
         return self.tool_ids
 
-    def run(self, prompt, thread=None, user=None, record=None):
+    def run(self, prompt, thread=None, user=None, record=None, files=None):
         self.ensure_one()
         if not user:
             user = self.env.user
@@ -159,21 +181,24 @@ class AiAgent(models.Model):
             thread = self._get_or_create_thread(user)
         if self.planning_enabled:
             return self._plan_and_run(prompt, thread, user, record)
-        return self._run_prompt(prompt, thread, user, record)
+        return self._run_prompt(prompt, thread, user, record, files=files)
 
-    def _run_prompt(self, prompt, thread, user, record=None):
+    def _run_prompt(self, prompt, thread, user, record=None, files=None):
         self.ensure_one()
         connection = self._select_connection(prompt)
         system_prompt = self._build_system_prompt()
-        call = self.env["ai.connection.call"].create(
-            {
-                "connection_id": connection.id,
-                "session_id": thread.session_id.id if thread.session_id else False,
-                "prompt": prompt,
-                "context": system_prompt,
-                "state": "draft",
-            }
-        )
+        call_vals = {
+            "connection_id": connection.id,
+            "session_id": thread.session_id.id if thread.session_id else False,
+            "prompt": prompt,
+            "context": system_prompt,
+            "state": "draft",
+        }
+        if files:
+            call_vals["files"] = files
+        if self.tool_ids:
+            call_vals["tool_ids"] = [(6, 0, self.tool_ids.ids)]
+        call = self.env["ai.connection.call"].create(call_vals)
         call._execute()
         if thread.session_id:
             thread.message_history = thread.session_id.message_history
