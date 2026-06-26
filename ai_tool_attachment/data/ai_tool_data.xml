@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record model="ai.tool" id="read_attachment">
+        <field name="name">read_attachment</field>
+        <field name="description">
+            Find attachments on a record. Returns id, filename, mimetype for each file.
+            Use this first to discover available files, then use the
+            format-specific tools (read_pdf, read_docx, read_odf, read_text, read_image)
+            to extract content from each attachment.
+        </field>
+        <field name="model_id" ref="model_ai_tool"/>
+        <field name="function_name">_ai_read_attachment</field>
+        <field name="kind">generic</field>
+    </record>
+</odoo>

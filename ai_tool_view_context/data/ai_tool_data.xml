@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record model="ai.tool" id="read_current_view">
+        <field name="name">read_current_view</field>
+        <field name="description">
+            [ALWAYS CALL THIS FIRST when the user asks "¿qué estoy viendo?",
+            "¿en qué pantalla estoy?", "analiza lo que veo", or anything about
+            their current screen. Do NOT guess or hallucinate — call this tool.]
+
+            Returns the model, view type, record count and data that the user
+            is currently looking at. No parameters needed — it auto-detects
+            from the user's current screen.
+        </field>
+        <field name="model_id" ref="model_ai_tool"/>
+        <field name="function_name">_ai_read_current_view</field>
+        <field name="kind">generic</field>
+    </record>
+</odoo>

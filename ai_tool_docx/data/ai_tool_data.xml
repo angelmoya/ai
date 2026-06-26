@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record model="ai.tool" id="read_docx">
+        <field name="name">read_docx</field>
+        <field name="description">
+            Extract text from a DOCX, XLSX, or PPTX attachment.
+        </field>
+        <field name="model_id" ref="model_ai_tool"/>
+        <field name="function_name">_ai_read_docx</field>
+        <field name="kind">generic</field>
+    </record>
+</odoo>
