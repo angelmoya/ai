@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo noupdate="1">
+    <record id="skill_category_odoo" model="ai.skill.category">
+        <field name="name">odoo</field>
+        <field name="description">Odoo development best practices and conventions.</field>
+    </record>
+
+    <record id="skill_custom_dev" model="ai.skill">
+        <field name="name">Custom Development Best Practices</field>
+        <field name="description">
+            Guidelines for creating Odoo customizations using the custom development tools.
+            Ensures complete, validated, and safe custom development.
+        </field>
+        <field name="category_id" ref="skill_category_odoo" />
+        <field name="priority">P1</field>
+        <field name="source">custom</field>
+        <field name="content"># Custom Development Best Practices
+
+## Guidelines
+
+### 0. Language &amp; Translation First
+- **All data (field descriptions, model names, etc.) MUST be created in English.**
+- **After creating data in English, add a translation to the user's working language.**
+- Use `create_or_update_translation` tool to manage translations.
+- Default working language is Spanish (es_ES) if not specified.
+
+### 1. Always determine placement for fields in views
+When the user asks to add a field to a view, determine the exact position. If not specified, ask:
+"¿En qué posición? (after/before/inside) ¿Respecto a qué campo, grupo o página?"
+
+Supported positions: after, before, inside.
+
+**IMPORTANT**: When adding a field before/after a target field that has a &lt;label&gt; element tied to it, place the new field BEFORE/AFTER the label as well, maintaining the same structure (field + label).
+
+### 2. Check for existing standard fields before creating
+Before calling create_field on a standard model:
+- Search ir.model.fields for the target model
+- If a standard field already covers the same purpose, warn the user
+- If a field with the same name already exists, do NOT create it again
+
+### 3. Field naming convention
+- Fields on standard models use regular names WITHOUT x_ prefix: project_code, extra_note, etc.
+- New models: {prefix}.{model_name} (e.g., custom_project)
+- View names: custom.{view_id}.{name}
+- Actions: {prefix}.{name}
+
+### 4. Security must be configured for new models
+- Default: read/write for all users, only admins can delete
+- After create_model, call create_access_rights
+
+### 5. Propose complete solutions
+Lead the user by suggesting a complete flow: model + fields + views + menu + access rights</field>
+    </record>
+</odoo>

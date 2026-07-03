@@ -8,6 +8,8 @@ class MailChannel(models.Model):
     _inherit = "discuss.channel"
 
     def message_post(self, **kwargs):
+        if self.env.context.get("ai_no_agent_trigger"):
+            return super().message_post(**kwargs)
         message = super().message_post(**kwargs)
         if message.author_id.user_ids.agent_id:
             return message
@@ -48,6 +50,19 @@ class MailChannel(models.Model):
                 finally:
                     recipient._notify_typing(is_typing=False)
         return message
+
+    def _get_channel_ai_agents(self, message):
+        result = []
+        recipients = self.sudo().channel_member_ids.filtered(
+            lambda m: m.partner_id != message.author_id
+            and m.partner_id.user_ids
+            and m.partner_id.user_ids.agent_id
+            and self._eligibile_for_ai(message, m)
+        )
+        for recipient in recipients:
+            for user in recipient.partner_id.user_ids.filtered("agent_id"):
+                result.append((user, user.agent_id))
+        return result
 
     def _eligibile_for_ai(self, message, recipient):
         if len(self.sudo().channel_member_ids) <= 2:

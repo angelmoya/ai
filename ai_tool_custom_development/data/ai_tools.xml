@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record model="ai.tool" id="create_model">
+        <field name="name">create_model</field>
+        <field name="description">Create a new Odoo model with fields. Use validation: check prefix naming convention, ask user about security.</field>
+        <field name="model_id" ref="model_ai_tool" />
+        <field name="function_name">_ai_create_model</field>
+        <field name="kind">generic</field>
+    </record>
+
+    <record model="ai.tool" id="create_field">
+        <field name="name">create_field</field>
+        <field name="description">Add a new field to an existing Odoo model. The field will be created with x_{prefix}_ prefix.</field>
+        <field name="model_id" ref="model_ai_tool" />
+        <field name="function_name">_ai_create_field</field>
+        <field name="kind">generic</field>
+    </record>
+
+    <record model="ai.tool" id="add_field_to_view">
+        <field name="name">add_field_to_view</field>
+        <field name="description">Add existing fields to a view at specific positions. Supports after, before, inside, inside_new_group, inside_new_page, top, bottom.</field>
+        <field name="model_id" ref="model_ai_tool" />
+        <field name="function_name">_ai_add_field_to_view</field>
+        <field name="kind">generic</field>
+    </record>
+
+    <record model="ai.tool" id="create_view">
+        <field name="name">create_view</field>
+        <field name="description">Create a new view (form, tree, kanban, search, etc.) for a model. Provide arch XML or field_list for auto-generation.</field>
+        <field name="model_id" ref="model_ai_tool" />
+        <field name="function_name">_ai_create_view</field>
+        <field name="kind">generic</field>
+    </record>
+
+    <record model="ai.tool" id="create_server_action">
+        <field name="name">create_server_action</field>
+        <field name="description">Create an ir.actions.server record (code, object_create, email, etc.).</field>
+        <field name="model_id" ref="model_ai_tool" />
+        <field name="function_name">_ai_create_server_action</field>
+        <field name="kind">generic</field>
+    </record>
+
+    <record model="ai.tool" id="create_scheduled_action">
+        <field name="name">create_scheduled_action</field>
+        <field name="description">Create an ir.cron scheduled action that runs Python code at intervals.</field>
+        <field name="model_id" ref="model_ai_tool" />
+        <field name="function_name">_ai_create_scheduled_action</field>
+        <field name="kind">generic</field>
+    </record>
+
+    <record model="ai.tool" id="create_automated_action">
+        <field name="name">create_automated_action</field>
+        <field name="description">Create a base.automation automated action triggered on create/write/delete/time.</field>
+        <field name="model_id" ref="model_ai_tool" />
+        <field name="function_name">_ai_create_automated_action</field>
+        <field name="kind">generic</field>
+    </record>
+
+    <record model="ai.tool" id="create_access_rights">
+        <field name="name">create_access_rights</field>
+        <field name="description">Create ir.model.access records for a model. Use after create_model to grant permissions.</field>
+        <field name="model_id" ref="model_ai_tool" />
+        <field name="function_name">_ai_create_access_rights</field>
+        <field name="kind">generic</field>
+    </record>
+
+    <record model="ai.tool" id="export_customizations">
+        <field name="name">export_customizations</field>
+        <field name="description">Export all customizations matching a prefix as a downloadable Odoo module ZIP.</field>
+        <field name="model_id" ref="model_ai_tool" />
+        <field name="function_name">_ai_export_customizations</field>
+        <field name="kind">generic</field>
+    </record>
+
+    <record model="ai.tool" id="get_model_views">
+        <field name="name">get_model_views</field>
+        <field name="description">Get all views (form, list, search, etc.) for a model, including their architecture XML. Use this BEFORE add_field_to_view to see the view structure and determine exact field positions.</field>
+        <field name="model_id" ref="model_ai_tool" />
+        <field name="function_name">_ai_get_model_views</field>
+        <field name="kind">generic</field>
+    </record>
+
+    <record model="ai.tool" id="create_or_update_translation">
+        <field name="name">create_or_update_translation</field>
+        <field name="description">Create or update a translation for a record field. Use this after creating data in English to add translations to the user's language (default: Spanish es_ES). Accepts: model, record_id, field_name, language, value.</field>
+        <field name="model_id" ref="model_ai_tool" />
+        <field name="function_name">_ai_create_or_update_translation</field>
+        <field name="kind">generic</field>
+    </record>
+</odoo>

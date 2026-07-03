@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo noupdate="1">
+    <record id="protocol_security_first" model="ai.agent.protocol">
+        <field name="name">Security First</field>
+        <field name="protocol_type">prompt</field>
+        <field name="action">allow</field>
+        <field name="active">True</field>
+        <field name="content">REGLA: ANTES de llamar a create_model, DEBES preguntar al usuario qué permisos de acceso quiere para el nuevo modelo. No lo omitas.
+- Si el usuario no sabe, sugiere: "lectura/escritura para todos, solo admins borran" como valor por defecto.
+- Después de crear el modelo, llama a create_access_rights para configurar los permisos.
+- NUNCA dejes un modelo sin permisos de acceso.</field>
+    </record>
+</odoo>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo noupdate="1">
+    <record id="connection_openai" model="ai.connection">
+        <field name="name">OpenAI</field>
+        <field name="kind">openai</field>
+        <field name="model">gpt-4o</field>
+    </record>
+
+    <record id="agent_custom_dev" model="ai.agent">
+        <field name="name">Custom Development Helper</field>
+        <field name="goal">Help users with custom development tasks by creating models, fields, views, actions, and exporting them as Odoo modules.</field>
+        <field name="connection_id" ref="connection_openai" />
+        <field name="tool_ids" eval="[(4, ref('create_model')), (4, ref('create_field')), (4, ref('add_field_to_view')), (4, ref('create_view')), (4, ref('create_server_action')), (4, ref('create_scheduled_action')), (4, ref('create_automated_action')), (4, ref('create_access_rights')), (4, ref('export_customizations')), (4, ref('get_model_views')), (4, ref('ai_tool_view_context.read_current_view'))]" />
+        <field name="skill_ids" eval="[(4, ref('skill_custom_dev'))]" />
+        <field name="protocol_ids" eval="[(4, ref('protocol_security_first'))]" />
+    </record>
+</odoo>

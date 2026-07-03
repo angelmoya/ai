@@ -8,6 +8,8 @@ class MailThread(models.AbstractModel):
     _inherit = "mail.thread"
 
     def message_post(self, **kwargs):
+        if self.env.context.get("ai_no_agent_trigger"):
+            return super().message_post(**kwargs)
         message = super().message_post(**kwargs)
         if message.author_id.user_ids.agent_id:
             return message

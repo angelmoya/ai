@@ -82,7 +82,12 @@ class AiAgent(models.Model):
 
     def _build_system_prompt(self):
         self.ensure_one()
-        parts = []
+        parts = [
+            "Eres un asistente de IA integrado en Odoo. "
+            "Responde a la pregunta del usuario de forma natural, clara y directa, "
+            "basándote en el contexto proporcionado. "
+            "No repitas el prompt ni el historial de la conversación."
+        ]
         if self.goal:
             parts.append(f"# Goal\n\n{self.goal}")
         if self.soul_id:

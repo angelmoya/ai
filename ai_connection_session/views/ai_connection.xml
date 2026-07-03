@@ -39,19 +39,6 @@
                     </button>
                 </div>
             </xpath>
-            <field name="kind" position="after">
-                <field name="tool_ids" widget="many2many_tags" />
-            </field>
-        </field>
-    </record>
-
-    <record model="ir.ui.view" id="ai_connection_session_list_view">
-        <field name="model">ai.connection</field>
-        <field name="inherit_id" ref="ai_connection.ai_connection_list_view" />
-        <field name="arch" type="xml">
-            <field name="kind" position="after">
-                <field name="call_count" />
-            </field>
         </field>
     </record>
 </odoo>

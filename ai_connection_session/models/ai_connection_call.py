@@ -190,7 +190,8 @@ class AiConnectionCall(models.Model):
 
     def _execute_tool_call(self, tool_name, tool_args):
         self.ensure_one()
-        tool = self.connection_id.tool_ids.filtered(lambda t: t.name == tool_name)
+        tools = self.tool_ids if self.tool_ids else self.connection_id.tool_ids
+        tool = tools.filtered(lambda t: t.name == tool_name)
         if not tool:
             raise ValueError(_("Tool %s not found.", tool_name))
         return tool._execute_tool(**tool_args)

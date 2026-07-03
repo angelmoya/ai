@@ -86,21 +86,31 @@ class OllamaClient(AiConnectionClient):
 
     def _adapt_message(self, msg):
         """Translate generic `files` to Ollama native `images`."""
+        import json
         msg = dict(msg)
         files = msg.pop("files", None)
-        if not files:
-            return msg
-        images = []
-        text_parts = []
-        for f in files:
-            if f.get("type") == "image" and f.get("data"):
-                images.append(f["data"])
-            elif f.get("data"):
-                text_parts.append(f"\n\n[file: {f.get('filename', 'unknown')}]\n{f['data'][:3000]}")
-        if images:
-            msg["images"] = images
-        if text_parts:
-            msg["content"] = (msg.get("content") or "") + "\n".join(text_parts)
+        if files:
+            images = []
+            text_parts = []
+            for f in files:
+                if f.get("type") == "image" and f.get("data"):
+                    images.append(f["data"])
+                elif f.get("data"):
+                    text_parts.append(f"\n\n[file: {f.get('filename', 'unknown')}]\n{f['data'][:3000]}")
+            if images:
+                msg["images"] = images
+            if text_parts:
+                msg["content"] = (msg.get("content") or "") + "\n".join(text_parts)
+
+        tool_calls = msg.get("tool_calls")
+        if tool_calls:
+            for tc in tool_calls:
+                fn = tc.get("function", {})
+                if isinstance(fn.get("arguments"), str):
+                    try:
+                        fn["arguments"] = json.loads(fn["arguments"])
+                    except (json.JSONDecodeError, TypeError):
+                        pass
         return msg
 
 
