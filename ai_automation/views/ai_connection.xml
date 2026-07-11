@@ -15,17 +15,11 @@
                     <notebook>
                         <page
                             string="Ollama configuration"
-                            attrs="{'invisible': [('kind', '!=', 'ollama')]}"
+                            invisible="kind != 'ollama'"
                         >
                             <group>
-                                <field
-                                    name="url"
-                                    attrs="{'required': [('kind', '=', 'ollama')]}"
-                                />
-                                <field
-                                    name="model"
-                                    attrs="{'required': [('kind', '=', 'ollama')]}"
-                                />
+                                <field name="url" required="kind == 'ollama'" />
+                                <field name="model" required="kind == 'ollama'" />
                             </group>
                         </page>
                     </notebook>
@@ -46,10 +40,10 @@
     <record model="ir.ui.view" id="ai_connection_tree_view">
         <field name="model">ai.connection</field>
         <field name="arch" type="xml">
-            <tree>
+            <list>
                 <field name="name" />
                 <field name="kind" />
-            </tree>
+            </list>
         </field>
     </record>
 

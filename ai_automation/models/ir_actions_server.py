@@ -1,10 +1,8 @@
 # Copyright 2026 Dixmit
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
-from lxml import etree
 
 from odoo import api, fields, models
-
-from odoo.addons.web_editor.models.ir_qweb_fields import html_to_text
+from odoo.tools.mail import html2plaintext
 
 
 class IrActionsServer(models.Model):
@@ -68,4 +66,4 @@ class IrActionsServer(models.Model):
                     self.ai_prompt, record and record._name, record and record.ids
                 )[record.id]
             )
-        return html_to_text(etree.fromstring("<t>" + ai_prompt + "</t>"))
+        return html2plaintext(ai_prompt)
