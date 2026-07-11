@@ -17,10 +17,10 @@ Ai Automation
     :target: http://www.gnu.org/licenses/agpl-3.0-standalone.html
     :alt: License: AGPL-3
 .. |badge3| image:: https://img.shields.io/badge/github-OCA%2Fai-lightgray.png?logo=github
-    :target: https://github.com/OCA/ai/tree/18.0/ai_automation
+    :target: https://github.com/OCA/ai/tree/18.0/ai_server_action
     :alt: OCA/ai
 .. |badge4| image:: https://img.shields.io/badge/weblate-Translate%20me-F47D42.png
-    :target: https://translation.odoo-community.org/projects/ai-18-0/ai-18-0-ai_automation
+    :target: https://translation.odoo-community.org/projects/ai-18-0/ai-18-0-ai_server_action
     :alt: Translate me on Weblate
 .. |badge5| image:: https://img.shields.io/badge/runboat-Try%20me-875A7B.png
     :target: https://runboat.odoo-community.org/builds?repo=OCA/ai&target_branch=18.0
@@ -29,9 +29,12 @@ Ai Automation
 |badge1| |badge2| |badge3| |badge4| |badge5|
 
 This module integrates AI connections with Odoo server actions, allowing
-you to define AI-powered automations. By default it provides Ollama
-support, but it can be extended with additional providers by adding new
-``kind`` options to ``ai.connection``.
+you to define AI-powered automations. Supports multiple output modes:
+post a message, update a record field, store in a context variable, or
+run silently.
+
+Supports markdown rendering in responses and template variables
+(``<t t-out='...'/>``) in prompts for dynamic content.
 
 **Table of contents**
 
@@ -41,25 +44,33 @@ support, but it can be extended with additional providers by adding new
 Usage
 =====
 
-This module adds a new server action type: **AI OCA Action**.
+This module adds a new server action type: **Run AI Prompt**.
 
 To use it:
 
 1. Go to ``Settings > Technical > Actions > Server Actions``
-2. Create a new action and select **AI OCA Action** as the state
-3. Select an AI Connection (Ollama)
+
+2. Create a new action and select **Run AI Prompt** as the action type
+
+3. Select an AI Connection (Ollama, OpenAI, etc.)
+
 4. Define the prompt — supports dynamic placeholders using Qweb syntax
-   (e.g. ``{{ object.name }}``)
+   (e.g. ``<t t-out='object.name'/>``)
+
 5. Optionally select tools the AI can call during execution
+
 6. Define what to do with the result:
 
    - **Post Message**: posts the AI response as a chatter message on the
      record
    - **Update Record**: writes the AI response to a specific field
+     (markdown rendered if field is HTML)
+   - **Store in Context Variable**: stores result for programmatic use
+   - **None**: runs the prompt silently, no output action
 
 To extend with a new AI provider, inherit ``ai.connection`` and add a
 new selection value to ``kind``, then implement the corresponding
-``_run_{kind}`` method.
+``_get_client_{kind}`` method.
 
 Bug Tracker
 ===========
@@ -67,7 +78,7 @@ Bug Tracker
 Bugs are tracked on `GitHub Issues <https://github.com/OCA/ai/issues>`_.
 In case of trouble, please check there if your issue has already been reported.
 If you spotted it first, help us to smash it by providing a detailed and welcomed
-`feedback <https://github.com/OCA/ai/issues/new?body=module:%20ai_automation%0Aversion:%2018.0%0A%0A**Steps%20to%20reproduce**%0A-%20...%0A%0A**Current%20behavior**%0A%0A**Expected%20behavior**>`_.
+`feedback <https://github.com/OCA/ai/issues/new?body=module:%20ai_server_action%0Aversion:%2018.0%0A%0A**Steps%20to%20reproduce**%0A-%20...%0A%0A**Current%20behavior**%0A%0A**Expected%20behavior**>`_.
 
 Do not contact contributors directly about support or help with technical issues.
 
@@ -86,7 +97,9 @@ Contributors
 
   - Enric Tobella
 
-- [SDi] (https://sdi.es)
+- `SDi <https://sdi.es>`__
+
+  - Angel Moya
 
 Maintainers
 -----------
@@ -101,6 +114,6 @@ OCA, or the Odoo Community Association, is a nonprofit organization whose
 mission is to support the collaborative development of Odoo features and
 promote its widespread use.
 
-This module is part of the `OCA/ai <https://github.com/OCA/ai/tree/18.0/ai_automation>`_ project on GitHub.
+This module is part of the `OCA/ai <https://github.com/OCA/ai/tree/18.0/ai_server_action>`_ project on GitHub.
 
 You are welcome to contribute. To learn how please visit https://odoo-community.org/page/Contribute.

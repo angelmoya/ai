@@ -1,3 +1,4 @@
 - [Dixmit](https://www.dixmit.com)
   - Enric Tobella
-- [SDi] (https://sdi.es)
+- [SDi](https://sdi.es)
+  - Angel Moya

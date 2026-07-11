@@ -8,7 +8,10 @@
     "license": "AGPL-3",
     "author": "Dixmit,Odoo Community Association (OCA)",
     "website": "https://github.com/OCA/ai",
-    "depends": ["ai_connection", "ai_tool"],
+    "depends": ["ai_connection", "ai_tool", "mail"],
+    "external_dependencies": {
+        "python": ["markdown"],
+    },
     "data": [
         "views/ir_actions_server.xml",
     ],
