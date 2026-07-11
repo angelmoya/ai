@@ -86,6 +86,8 @@ Contributors
 
   - Enric Tobella
 
+- [SDi] (https://sdi.es)
+
 Maintainers
 -----------
 
