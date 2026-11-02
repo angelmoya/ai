@@ -19,7 +19,7 @@
                             name="description"
                             placeholder="Short description for LLM tool selection..."
                         />
-                        <field name="tool_id" readonly="1" />
+                        <field name="tool_id" readonly="1" invisible="not id" />
                     </group>
                     <notebook>
                         <page string="Content" name="content">

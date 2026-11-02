@@ -1,7 +1,7 @@
 # Copyright 2026 SDi - Ángel Moya <amoya@sdi.es>
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
 
-from odoo import fields, models
+from odoo import api, fields, models
 
 from odoo.addons.ai_tool.tools import aitool
 
@@ -19,11 +19,16 @@ class AiSkill(models.Model):
         help="Detailed instructions and guidelines in Markdown format.",
     )
 
-    model_id = fields.Many2one(
-        default=lambda self: self.env["ir.model"]._get("ai.skill").id
-    )
-    function_name = fields.Char(default="_ai_get_skill_content")
-    kind = fields.Selection(default="generic")
+    @api.model
+    def default_get(self, fields_list):
+        res = super().default_get(fields_list)
+        defaults = {
+            "model_id": self.env["ir.model"]._get_id("ai.skill"),
+            "function_name": "_ai_get_skill_content",
+            "kind": "generic",
+        }
+        res.update({k: v for k, v in defaults.items() if k in fields_list})
+        return res
 
     @aitool(
         input_schema={},
