@@ -3,7 +3,8 @@
 
 import json
 
-from odoo import fields, models
+from odoo import _, api, fields, models
+from odoo.exceptions import ValidationError
 
 
 class AiTool(models.Model):
@@ -29,6 +30,35 @@ class AiTool(models.Model):
         string="Output Schema (JSON)",
         help="Define the expected output schema for the LLM in JSON format.",
     )
+
+    @api.constrains("input_schema_json", "output_schema_json")
+    def _check_schemas_json(self):
+        for tool in self:
+            for field_name in ("input_schema_json", "output_schema_json"):
+                raw = tool[field_name]
+                if not raw:
+                    continue
+                try:
+                    schema = json.loads(raw)
+                except ValueError as exc:
+                    raise ValidationError(
+                        _(
+                            "The %(field_label)s of AI tool '%(tool_name)s' "
+                            "is not valid JSON: %(error)s",
+                            field_label=tool._fields[field_name].string,
+                            tool_name=tool.name,
+                            error=exc,
+                        )
+                    ) from exc
+                if not isinstance(schema, dict):
+                    raise ValidationError(
+                        _(
+                            "The %(field_label)s of AI tool '%(tool_name)s' "
+                            "must be a JSON object.",
+                            field_label=tool._fields[field_name].string,
+                            tool_name=tool.name,
+                        )
+                    )
 
     def _get_tool_definition(self):
         if self.kind == "server_action":

@@ -1,6 +1,7 @@
 # Copyright 2026 SDi
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
 
+from odoo.exceptions import AccessError, ValidationError
 from odoo.tests.common import TransactionCase
 
 
@@ -8,6 +9,19 @@ class TestAiToolServerAction(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        cls.demo_user = (
+            cls.env["res.users"]
+            .with_context(no_reset_password=True)
+            .create(
+                {
+                    "name": "AI Tool Demo User",
+                    "login": "ai_tool_demo_user",
+                    "groups_id": [
+                        (4, cls.env.ref("base.group_user").id),
+                    ],
+                }
+            )
+        )
         cls.server_action = cls.env["ir.actions.server"].create(
             {
                 "name": "Test Server Action",
@@ -53,17 +67,12 @@ action = {
         )
         self.assertEqual(definition["outputSchema"], {"type": "object"})
 
-    def test_get_tool_definition_invalid_json(self):
-        """Test that _get_tool_definition handles invalid JSON gracefully"""
-        self.ai_tool.write(
-            {
-                "input_schema_json": "invalid json",
-                "output_schema_json": "also invalid",
-            }
-        )
-        definition = self.ai_tool._get_tool_definition()
-        self.assertEqual(definition["inputSchema"], {})
-        self.assertEqual(definition["outputSchema"], {})
+    def test_schema_json_validation(self):
+        """Test that invalid JSON schemas are rejected on write"""
+        with self.assertRaises(ValidationError):
+            self.ai_tool.write({"input_schema_json": "invalid json"})
+        with self.assertRaises(ValidationError):
+            self.ai_tool.write({"output_schema_json": '["not", "an", "object"]'})
 
     def test_execute_tool(self):
         """Test that _execute_tool correctly delegates to the server action"""
@@ -252,3 +261,25 @@ action = {
         definition = generic_tool._get_tool_definition()
         self.assertEqual(definition["name"], "get_date_tool")
         self.assertIn("date", definition["outputSchema"].get("properties", {}))
+
+    def test_wizard_action_apply_requires_server_action_write_access(self):
+        """A user without write access on the server action must not be able
+        to create/modify ai.tool records through the wizard (sudo)"""
+        wizard = (
+            self.env["ai.tool.server.action.wizard"]
+            .with_user(self.demo_user)
+            .create(
+                {
+                    "server_action_id": self.server_action.id,
+                    "ai_tool_id": self.ai_tool.id,
+                    "name": "Escalated Tool",
+                    "description": "Should not be applied",
+                    "input_schema_json": "{}",
+                    "output_schema_json": "{}",
+                }
+            )
+        )
+        with self.assertRaises(AccessError):
+            wizard.action_apply()
+        self.ai_tool.invalidate_model()
+        self.assertEqual(self.ai_tool.name, "test_server_action_tool")
