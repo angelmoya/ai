@@ -5,7 +5,7 @@ from datetime import timedelta
 from unittest.mock import patch
 
 from odoo import fields
-from odoo.exceptions import AccessError
+from odoo.exceptions import AccessError, UserError
 from odoo.tools import config, mute_logger
 
 from .common import AiAgentCase
@@ -83,6 +83,61 @@ class TestAiAgentSession(AiAgentCase):
             ]
         )
         self.assertTrue(session)
+
+    def test_answer_on_document_is_an_internal_note(self):
+        document = self.env["ai.agent.test.document"].create({"name": "Doc"})
+        document.with_user(self.human).message_post(
+            body="hola",
+            partner_ids=[self.agent_user.partner_id.id],
+            message_type="comment",
+            subtype_xmlid="mail.mt_note",
+        )
+        self._run_worker()
+        answer = self._comments(document)[-1]
+        self.assertEqual(answer.author_id, self.agent_user.partner_id)
+        self.assertEqual(answer.subtype_id, self.env.ref("mail.mt_note"))
+
+    def test_answer_in_discuss_is_a_message(self):
+        channel = self._create_agent_channel()
+        self._post(channel, "Hola agente")
+        self._run_worker()
+        answer = self._comments(channel)[-1]
+        self.assertEqual(answer.author_id, self.agent_user.partner_id)
+        self.assertEqual(answer.subtype_id, self.env.ref("mail.mt_comment"))
+
+    def test_answer_on_document_the_agent_can_not_read(self):
+        group = self.env["res.groups"].create({"name": "Document users"})
+        self.human.groups_id = [(4, group.id)]
+        self.env["ir.model.access"].search(
+            [("name", "=", "ai_agent_test_document_all")]
+        ).group_id = group
+        document = self.env["ai.agent.test.document"].create({"name": "Doc"})
+        document.with_user(self.human).message_post(
+            body="hola",
+            partner_ids=[self.agent_user.partner_id.id],
+            message_type="comment",
+            subtype_xmlid="mail.mt_note",
+        )
+        self._run_worker()
+        answer = self._comments(document)[-1]
+        self.assertEqual(answer.author_id, self.agent_user.partner_id)
+        self.assertEqual(self._session(document).state, "idle")
+
+    @mute_logger("odoo.addons.ai_agent.models.ai_agent_session")
+    def test_fail_when_the_failure_can_not_be_posted(self):
+        channel = self._create_agent_channel()
+        session = self.env["ai.agent.session"]._get_or_create_session(
+            self.agent, self.human, "discuss.channel", channel.id
+        )
+        with patch.object(
+            self.env.registry["ai.agent.session"],
+            "_post_note",
+            autospec=True,
+            side_effect=UserError("no email"),
+        ):
+            session._fail("boom")
+        self.assertEqual(session.state, "error")
+        self.assertEqual(session.error_message, "boom")
 
     def test_document_message_without_mention_does_not_trigger(self):
         document = self.env["ai.agent.test.document"].create({"name": "Doc"})

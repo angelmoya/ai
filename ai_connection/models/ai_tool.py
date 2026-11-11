@@ -20,13 +20,15 @@ class AiTool(models.Model):
         """Whether the ``activity`` argument is injected for this tool.
 
         Only when requested through the ``ai_tool_activity`` context and the
-        tool does not already define an argument with that name.
+        tool does not already define an argument with that name. The arguments
+        are read from the definition of the tool, whatever its kind: not all
+        tools have a decorated method.
         """
         self.ensure_one()
         if not self.env.context.get("ai_tool_activity"):
             return False
-        func = getattr(self.env[self.model_id.model], self.function_name)
-        properties = func._ai_tool["input_schema"].get("properties") or {}
+        definition = self.with_context(ai_tool_activity=False)._get_tool_definition()
+        properties = (definition.get("inputSchema") or {}).get("properties") or {}
         return ACTIVITY_ARGUMENT not in properties
 
     def _get_tool_definition(self):
