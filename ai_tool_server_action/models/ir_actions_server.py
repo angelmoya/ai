@@ -7,10 +7,10 @@ from odoo import api, fields, models
 class IrActionsServer(models.Model):
     _inherit = "ir.actions.server"
 
-    ai_tool_ids = fields.One2many(
+    ai_tool_server_ids = fields.One2many(
         "ai.tool",
         "server_action_id",
-        string="AI Tools",
+        string="AI Tools Running This Action",
     )
     ai_tool_id = fields.Many2one(
         "ai.tool",
@@ -33,15 +33,15 @@ class IrActionsServer(models.Model):
         string="AI Tool Output Schema",
     )
 
-    @api.depends("ai_tool_ids")
+    @api.depends("ai_tool_server_ids")
     def _compute_ai_tool_id(self):
         for rec in self:
-            rec.ai_tool_id = rec.ai_tool_ids[:1]
+            rec.ai_tool_id = rec.ai_tool_server_ids[:1]
 
     @api.depends(
-        "ai_tool_ids.input_schema_json",
-        "ai_tool_ids.output_schema_json",
-        "ai_tool_ids.description",
+        "ai_tool_server_ids.input_schema_json",
+        "ai_tool_server_ids.output_schema_json",
+        "ai_tool_server_ids.description",
     )
     def _compute_ai_tool_fields(self):
         for rec in self:

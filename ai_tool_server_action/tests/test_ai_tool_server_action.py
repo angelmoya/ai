@@ -1,6 +1,7 @@
 # Copyright 2026 SDi
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
 
+from odoo.exceptions import AccessError, ValidationError
 from odoo.tests.common import TransactionCase
 
 
@@ -8,6 +9,19 @@ class TestAiToolServerAction(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        cls.demo_user = (
+            cls.env["res.users"]
+            .with_context(no_reset_password=True)
+            .create(
+                {
+                    "name": "AI Tool Demo User",
+                    "login": "ai_tool_demo_user",
+                    "groups_id": [
+                        (4, cls.env.ref("base.group_user").id),
+                    ],
+                }
+            )
+        )
         cls.server_action = cls.env["ir.actions.server"].create(
             {
                 "name": "Test Server Action",
@@ -36,11 +50,23 @@ action = {
         )
 
     def test_tool_creation(self):
-        """Test that the tool is correctly created without model_id and function_name"""
+        """Test that the tool is correctly created with the model of the server
+        action and without function_name"""
         self.assertEqual(self.ai_tool.kind, "server_action")
         self.assertEqual(self.ai_tool.server_action_id, self.server_action)
-        self.assertFalse(self.ai_tool.model_id)
+        self.assertEqual(self.ai_tool.model_id, self.server_action.model_id)
         self.assertFalse(self.ai_tool.function_name)
+
+    def test_tool_model_follows_server_action(self):
+        """Test that the model of the tool follows its server action, so it is
+        offered for the records of that model"""
+        model_users = self.env.ref("base.model_res_users")
+        self.server_action.model_id = model_users
+        self.assertEqual(self.ai_tool.model_id, model_users)
+        self.assertIn(
+            self.ai_tool,
+            self.env["ai.tool"].search([("model_id", "=", model_users.id)]),
+        )
 
     def test_get_tool_definition(self):
         """Test that _get_tool_definition correctly parses JSON schemas"""
@@ -53,22 +79,26 @@ action = {
         )
         self.assertEqual(definition["outputSchema"], {"type": "object"})
 
-    def test_get_tool_definition_invalid_json(self):
-        """Test that _get_tool_definition handles invalid JSON gracefully"""
-        self.ai_tool.write(
-            {
-                "input_schema_json": "invalid json",
-                "output_schema_json": "also invalid",
-            }
-        )
-        definition = self.ai_tool._get_tool_definition()
-        self.assertEqual(definition["inputSchema"], {})
-        self.assertEqual(definition["outputSchema"], {})
+    def test_schema_json_validation(self):
+        """Test that invalid JSON schemas are rejected on write"""
+        with self.assertRaises(ValidationError):
+            self.ai_tool.write({"input_schema_json": "invalid json"})
+        with self.assertRaises(ValidationError):
+            self.ai_tool.write({"output_schema_json": '["not", "an", "object"]'})
 
     def test_execute_tool(self):
         """Test that _execute_tool correctly delegates to the server action"""
         result = self.ai_tool._execute_tool(query="test_query")
         self.assertEqual(result.get("status"), "ok")
+        self.assertEqual(result.get("received_query"), "test_query")
+
+    def test_execute_tool_as_user(self):
+        """Users without access to the models (ir.model) and the server
+        actions can use the tool, allowed by the groups of the action"""
+        self.server_action.groups_id = self.env.ref("base.group_user")
+        tool = self.ai_tool.with_user(self.demo_user)
+        self.assertEqual(tool._get_tool_definition()["name"], tool.name)
+        result = tool._execute_tool(query="test_query")
         self.assertEqual(result.get("received_query"), "test_query")
 
     def test_execute_tool_no_dict_return(self):
@@ -190,6 +220,8 @@ action = {
         wizard.action_apply()
         self.assertTrue(new_action.ai_tool_id)
         self.assertEqual(new_action.ai_tool_id.name, "New Tool")
+        self.assertEqual(new_action.ai_tool_id.model_id, new_action.model_id)
+        self.assertEqual(new_action.ai_tool_server_ids, new_action.ai_tool_id)
 
     def test_wizard_action_apply_update(self):
         """Test wizard updating an existing ai.tool"""
@@ -252,3 +284,25 @@ action = {
         definition = generic_tool._get_tool_definition()
         self.assertEqual(definition["name"], "get_date_tool")
         self.assertIn("date", definition["outputSchema"].get("properties", {}))
+
+    def test_wizard_action_apply_requires_server_action_write_access(self):
+        """A user without write access on the server action must not be able
+        to create/modify ai.tool records through the wizard (sudo)"""
+        wizard = (
+            self.env["ai.tool.server.action.wizard"]
+            .with_user(self.demo_user)
+            .create(
+                {
+                    "server_action_id": self.server_action.id,
+                    "ai_tool_id": self.ai_tool.id,
+                    "name": "Escalated Tool",
+                    "description": "Should not be applied",
+                    "input_schema_json": "{}",
+                    "output_schema_json": "{}",
+                }
+            )
+        )
+        with self.assertRaises(AccessError):
+            wizard.action_apply()
+        self.ai_tool.invalidate_model()
+        self.assertEqual(self.ai_tool.name, "test_server_action_tool")

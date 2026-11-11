@@ -66,6 +66,12 @@ class AiToolServerActionWizard(models.TransientModel):
 
     def action_apply(self):
         self.ensure_one()
+        # Configuring an AI tool is a privileged operation: ai.tool is
+        # read-only for non-superusers by design, hence the sudo() below.
+        # Gate it on write access to the server action (group_system only),
+        # so that any internal user cannot abuse the wizard model's ACL to
+        # create/modify ai.tool records over RPC.
+        self.server_action_id.check_access("write")
         vals = {
             "name": self.name,
             "description": self.description,
